@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96" role="img" aria-labelledby="title">
+  <title id="title">Structured diagnostic flow mark</title>
+  <rect x="8" y="8" width="80" height="80" rx="16" fill="#edf7f5"/>
+  <path d="M28 30h18v8H28z" fill="#176b63"/>
+  <path d="M50 26h18v16H50z" fill="#2f5f98"/>
+  <path d="M28 58h18v8H28z" fill="#b7791f"/>
+  <path d="M50 54h18v16H50z" fill="#2f7d46"/>
+  <path d="M46 34h4M59 42v12M46 62h4" stroke="#16201c" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="24" cy="34" r="5" fill="#16201c"/>
+  <circle cx="72" cy="34" r="5" fill="#16201c"/>
+  <circle cx="24" cy="62" r="5" fill="#16201c"/>
+  <circle cx="72" cy="62" r="5" fill="#16201c"/>
+</svg>
