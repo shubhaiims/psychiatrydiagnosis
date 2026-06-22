@@ -18,9 +18,8 @@ Use this file when you want to edit the server, generated cases, API routes, or 
 - `GET /api/health`: server status and data counts.
 - `GET /api/config`: public app name, mode rules, cue counts, and how-to-play copy.
 - `GET /api/diagnoses`: public diagnosis labels.
-- `GET /api/cases/today?mode=easy|classic|tough&date=YYYY-MM-DD`: public case payload with no answer.
-- `POST /api/reveal`: returns the next cue for a case.
-- `POST /api/guess`: validates a guess and returns answer details only after completion.
+- `GET /api/cases/today?mode=easy|difficult&date=YYYY-MM-DD`: public case payload with one starting cue and no answer.
+- `POST /api/guess`: validates a guess, returns one next cue when wrong, and returns only the public answer when complete.
 - `GET /api/premium/diagnosis/:id`: returns Plus-only criteria and differential guide after token validation.
 
 ## Private Data Rules
@@ -33,7 +32,7 @@ Use this file when you want to edit the server, generated cases, API routes, or 
 ## Common Edits
 
 - Rename the app: edit `appName` in `backend/game-config.mjs`.
-- Change mode labels, cue counts, guess limits, and how-to-play copy: edit `backend/game-config.mjs`.
+- Change mode labels, difficulty selection, cue counts, guess limits, and how-to-play copy: edit `backend/game-config.mjs`.
 - Add or improve case patterns: edit `profiles` in `backend/generate-cases.mjs`.
 - Add diagnosis labels: edit `profiles` or `extraDiagnoses` in `backend/generate-cases.mjs`.
 - Regenerate 1200 cases: run `npm.cmd run train:cases`.

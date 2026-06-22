@@ -2,47 +2,34 @@ export const GAME_CONFIG = {
   appName: "DIAGNOSIS DASH",
   baseDate: "2026-06-22",
   maxClues: 6,
-  defaultMode: "classic",
+  defaultMode: "easy",
   modes: [
     {
       id: "easy",
       label: "Easy",
-      description: "Starts with 4 cues and allows six guesses.",
-      startingClues: 4,
+      description: "One cue at a time. Easier cases selected by backend.",
+      startingClues: 1,
       maxGuesses: 6,
-      canReveal: false,
-      finalGuessOnly: false,
       difficulty: "easy",
       offset: 191
     },
     {
-      id: "classic",
-      label: "Classic",
-      description: "Starts with 3 cues. Misses reveal more.",
-      startingClues: 3,
+      id: "difficult",
+      label: "Difficult",
+      description: "One cue at a time. Harder cases selected by backend.",
+      startingClues: 1,
       maxGuesses: 6,
-      canReveal: false,
-      finalGuessOnly: false,
-      difficulty: "all",
-      offset: 0
-    },
-    {
-      id: "tough",
-      label: "Tough",
-      description: "Starts with 5 cues. One final answer.",
-      startingClues: 5,
-      maxGuesses: 1,
-      canReveal: true,
-      finalGuessOnly: true,
-      difficulty: "tough",
+      difficulty: "difficult",
       offset: 397
     }
   ],
   howToPlay: [
-    "Easy mode starts with 4 cues and gives 6 guesses.",
-    "Classic mode starts with 3 cues and reveals a new cue after each miss.",
-    "Tough mode starts with 5 cues, lets you reveal the final cue, and your first diagnosis is final.",
+    "Choose Easy or Difficult; the backend selects the case difficulty.",
+    "Each case starts with one cue.",
+    "Submit a diagnosis after each cue.",
+    "If the guess is wrong, the backend reveals one more cue.",
+    "A maximum of 6 cues and 6 guesses are available.",
     "Cases, cue counts, guess validation, and answers come from the backend.",
-    "Plus-only clinical breakdowns load only after paid access is verified."
+    "Clinical details, criteria guides, and differentials load only in the paid Plus version."
   ]
 };

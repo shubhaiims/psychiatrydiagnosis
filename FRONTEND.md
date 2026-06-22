@@ -15,9 +15,9 @@ Edit these in `backend/game-config.mjs`:
 
 - App name
 - Mode labels and descriptions
+- Easy and Difficult case selection
 - Starting cue counts
 - Guess limits
-- Whether a mode can reveal extra cues
 - How-to-play copy
 
 Edit generated case patterns in `backend/generate-cases.mjs`, then run `npm.cmd run train:cases`.
@@ -28,8 +28,8 @@ Edit generated case patterns in `backend/generate-cases.mjs`, then run `npm.cmd 
 2. The mode buttons and how-to-play list are rendered from backend config.
 3. Diagnoses are loaded from `/api/diagnoses`.
 4. The current case is loaded from `/api/cases/today`.
-5. Cue reveals are requested from `/api/reveal`.
-6. Guesses are validated by `/api/guess`.
+5. Guesses are validated by `/api/guess`.
+6. Wrong guesses receive exactly one new cue from the backend until the six-cue limit.
 7. Plus content is requested from `/api/premium/diagnosis/:id` after token entry.
 
 ## Safety Rule

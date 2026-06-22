@@ -5,13 +5,12 @@ An original DSM-5-TR educational diagnosis guessing game inspired by daily word 
 ## What Is New
 
 - Backend-only editing: app name, mode rules, cue counts, cases, answers, and Plus guides live in backend files.
-- Classic Mode: starts with 3 cues and gives six guesses.
-- Easy Mode: starts with 4 cues and allows six guesses.
-- Tough Mode: starts with 5 cues, allows the final cue to be revealed, then gives one final diagnosis guess.
-- Backend case engine: the frontend requests cases, cue reveals, and guess validation from `server.mjs`.
+- Easy Mode: starts with one cue, backend selects easier cases, and allows up to six guesses.
+- Difficult Mode: starts with one cue, backend selects harder cases, and allows up to six guesses.
+- One cue at a time: a wrong guess reveals exactly one additional cue until the six-cue limit.
+- Backend case engine: the frontend requests cases and guess validation from `server.mjs`.
 - More than 1000 generated fictional training cases stored in backend data.
 - Plus-only breakdowns: criteria guide, differential diagnoses, and how to distinguish them are returned only after a backend token check.
-- Static fallback data for GitHub Pages demos.
 
 ## Run Locally
 
@@ -46,7 +45,7 @@ Then enter `test-plus` in the Plus token field after finishing a case.
 
 - `data/diagnoses.json`: public DSM-5-TR diagnostic label list.
 - `backend/game-config.mjs`: editable backend source for app name, mode rules, cue counts, and how-to-play copy.
-- `data/static-cases.json`: generated answer-containing data for reference only; the app now requires the backend.
+- `data/static-cases.json`: generated answer-containing data for reference only; direct browser access is blocked by the backend.
 - `backend/private/cases.json`: backend case bank used by `server.mjs`.
 - `backend/private/premium-diagnoses.json`: Plus-only educational diagnosis guides.
 - `backend/generate-cases.mjs`: deterministic case generator. Increase `--count` to create more cases.

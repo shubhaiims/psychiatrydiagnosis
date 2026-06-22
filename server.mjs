@@ -95,24 +95,6 @@ async function handleApi(req, res, url) {
     return;
   }
 
-  if (method === "POST" && url.pathname === "/api/reveal") {
-    const body = await readJsonBody(req);
-    const caseRecord = findCase(body.caseId);
-    if (!caseRecord) {
-      sendJson(res, 404, { error: "Case not found." });
-      return;
-    }
-
-    const revealedClues = clamp(Number(body.revealedClues || 1), 1, MAX_CLUES);
-    const clue = caseRecord.clues[revealedClues] || null;
-    sendJson(res, 200, {
-      clue,
-      revealedClues: clue ? revealedClues + 1 : revealedClues,
-      totalClues: Math.min(MAX_CLUES, caseRecord.clues.length)
-    });
-    return;
-  }
-
   if (method === "POST" && url.pathname === "/api/guess") {
     const body = await readJsonBody(req);
     const caseRecord = findCase(body.caseId);
@@ -130,7 +112,7 @@ async function handleApi(req, res, url) {
     const revealedClues = clamp(Number(body.revealedClues || 1), 1, MAX_CLUES);
     const correct = guessedDiagnosis.id === answer.id;
     const near = !correct && guessedDiagnosis.category === answer.category;
-    const completed = correct || modeConfig(mode).finalGuessOnly || guessCount >= maxGuesses;
+    const completed = correct || guessCount >= maxGuesses;
 
     const payload = {
       correct,
@@ -140,11 +122,11 @@ async function handleApi(req, res, url) {
 
     if (completed) {
       Object.assign(payload, {
-        answer: publicDiagnosis(answer),
-        explanation: caseRecord.explanation,
-        differentials: caseRecord.differentials,
-        allClues: caseRecord.clues.slice(0, MAX_CLUES)
+        answer: publicDiagnosis(answer)
       });
+      if (!correct) {
+        payload.allClues = caseRecord.clues.slice(0, MAX_CLUES);
+      }
     } else {
       payload.nextClue = caseRecord.clues[revealedClues] || null;
     }
@@ -242,8 +224,8 @@ function publicDiagnosis(diagnosis) {
 
 function selectCaseForDate(cases, mode, date) {
   const difficulty = modeConfig(mode).difficulty;
-  const pool = difficulty === "tough"
-    ? cases.filter((caseRecord) => Number(caseRecord.difficulty || 0) >= 3)
+  const pool = difficulty === "difficult"
+    ? cases.filter((caseRecord) => Number(caseRecord.difficulty || 0) >= 4)
     : difficulty === "easy"
       ? cases.filter((caseRecord) => Number(caseRecord.difficulty || 0) <= 3)
     : cases;
@@ -279,9 +261,7 @@ function publicConfig() {
       label: mode.label,
       description: mode.description,
       startingClues: mode.startingClues,
-      maxGuesses: mode.maxGuesses,
-      canReveal: mode.canReveal,
-      finalGuessOnly: mode.finalGuessOnly
+      maxGuesses: mode.maxGuesses
     })),
     howToPlay: GAME_CONFIG.howToPlay
   };

@@ -20,8 +20,6 @@ const els = {
   resetButton: document.getElementById("resetButton"),
   modeToggle: document.getElementById("modeToggle"),
   howToPlayList: document.getElementById("howToPlayList"),
-  toughActions: document.getElementById("toughActions"),
-  revealClueButton: document.getElementById("revealClueButton"),
   resultModal: document.getElementById("resultModal"),
   closeResult: document.getElementById("closeResult"),
   modalClose: document.getElementById("modalClose"),
@@ -45,7 +43,7 @@ const els = {
 let appConfig = null;
 let diagnoses = [];
 let activeCase = null;
-let appMode = "classic";
+let appMode = "easy";
 let apiMode = false;
 let state = null;
 
@@ -81,7 +79,6 @@ function bindEvents() {
   els.closeResult.addEventListener("click", () => els.resultModal.close());
   els.modalClose.addEventListener("click", () => els.resultModal.close());
   els.closeStats.addEventListener("click", () => els.statsModal.close());
-  els.revealClueButton.addEventListener("click", revealNextClue);
   els.unlockPremium.addEventListener("click", unlockPremium);
   els.modeToggle.addEventListener("click", (event) => {
     const button = event.target.closest("[data-mode]");
@@ -125,9 +122,7 @@ function normalizeCase(caseRecord) {
     difficulty: Number(caseRecord.difficulty || 3),
     totalClues: Number(caseRecord.totalClues || allClues.length || maxClues()),
     clues: allClues.length ? allClues : [],
-    answerId: null,
-    explanation: "",
-    differentials: []
+    answerId: null
   };
 }
 
@@ -179,13 +174,11 @@ function normalizeConfig(config) {
   const modes = Array.isArray(config?.modes) && config.modes.length
     ? config.modes
     : [{
-        id: "classic",
-        label: "Classic",
+        id: "easy",
+        label: "Easy",
         description: "Backend mode configuration unavailable.",
         startingClues: 1,
-        maxGuesses: 6,
-        canReveal: false,
-        finalGuessOnly: false
+        maxGuesses: 6
       }];
 
   return {
@@ -197,9 +190,7 @@ function normalizeConfig(config) {
       label: mode.label || mode.id,
       description: mode.description || "",
       startingClues: Number(mode.startingClues || 1),
-      maxGuesses: Number(mode.maxGuesses || 6),
-      canReveal: Boolean(mode.canReveal),
-      finalGuessOnly: Boolean(mode.finalGuessOnly)
+      maxGuesses: Number(mode.maxGuesses || 6)
     })),
     howToPlay: Array.isArray(config?.howToPlay) ? config.howToPlay : []
   };
@@ -221,7 +212,7 @@ function maxClues() {
 }
 
 function defaultMode() {
-  return appConfig?.defaultMode || appConfig?.modes?.[0]?.id || "classic";
+  return appConfig?.defaultMode || appConfig?.modes?.[0]?.id || "easy";
 }
 
 function modeList() {
@@ -237,7 +228,7 @@ function modeConfig(mode) {
 }
 
 function modeLabel(mode) {
-  return modeConfig(mode)?.label || "Classic";
+  return modeConfig(mode)?.label || "Easy";
 }
 
 function renderModeButtons() {
@@ -301,10 +292,6 @@ function findDiagnosis(input) {
   }) || null;
 }
 
-function answerDiagnosisStatic() {
-  return null;
-}
-
 function maxGuessesForMode() {
   return modeConfig(appMode)?.maxGuesses || 6;
 }
@@ -320,9 +307,7 @@ function createInitialState() {
     guesses: [],
     completed: false,
     won: false,
-    answer: null,
-    explanation: "",
-    differentials: []
+    answer: null
   };
 }
 
@@ -340,8 +325,7 @@ function loadState() {
         ...parsed,
         revealedClues: Math.max(clues.length, Math.min(maxClues(), Number(parsed.revealedClues || clues.length || 1))),
         clues,
-        guesses: Array.isArray(parsed.guesses) ? parsed.guesses : [],
-        differentials: Array.isArray(parsed.differentials) ? parsed.differentials : []
+        guesses: Array.isArray(parsed.guesses) ? parsed.guesses : []
       };
     }
   } catch {
@@ -453,14 +437,12 @@ async function submitGuess(event) {
       state.completed = true;
       state.won = Boolean(result.correct);
       state.answer = result.answer || null;
-      state.explanation = result.explanation || activeCase.explanation || "";
-      state.differentials = result.differentials || activeCase.differentials || [];
       if (!state.won && Array.isArray(result.allClues)) {
         state.clues = result.allClues.slice(0, maxClues());
         state.revealedClues = state.clues.length;
       }
       recordStats();
-      showMessage(state.won ? "Correct. Nice clinical reasoning." : "Case complete. Review the explanation.");
+      showMessage(state.won ? "Correct. Plus unlocks the clinical breakdown." : "Case complete. Plus unlocks the clinical breakdown.");
       openResultModal();
     } else {
       showMessage(result.near ? "Same diagnostic family. Getting warmer." : "Not the best fit yet. New cue revealed.");
@@ -489,35 +471,6 @@ async function submitGuessToBackend(diagnosis) {
   });
 }
 
-async function revealNextClue() {
-  if (!state || state.completed || !modeConfig(appMode)?.canReveal) return;
-  if (state.clues.length >= Math.min(maxClues(), activeCase.totalClues)) {
-    showMessage("All cues are already revealed.");
-    return;
-  }
-
-  els.revealClueButton.disabled = true;
-  try {
-    const result = await fetchJson("/api/reveal", {
-      method: "POST",
-      body: JSON.stringify({ caseId: activeCase.id, revealedClues: state.clues.length })
-    });
-
-    if (result.clue) {
-      addClue(result.clue);
-      saveState();
-      render();
-      showMessage(`New cue revealed. Your diagnosis is still final in ${modeLabel(appMode)} Mode.`);
-    } else {
-      showMessage("No more cues available.");
-    }
-  } catch (error) {
-    showMessage(error.message || "Could not reveal another cue.");
-  } finally {
-    els.revealClueButton.disabled = false;
-  }
-}
-
 function addClue(clue) {
   if (!clue || state.clues.includes(clue)) return;
   state.clues = [...state.clues, clue].slice(0, maxClues());
@@ -531,7 +484,6 @@ function showMessage(message) {
 function setLoading(isLoading) {
   els.guessInput.disabled = isLoading || Boolean(state?.completed);
   els.guessForm.querySelector("button").disabled = isLoading || Boolean(state?.completed);
-  els.revealClueButton.disabled = isLoading;
 }
 
 function setFormBusy(isBusy) {
@@ -553,9 +505,6 @@ function render() {
   els.modeToggle.querySelectorAll("[data-mode]").forEach((button) => {
     button.classList.toggle("is-active", button.dataset.mode === appMode);
   });
-  els.toughActions.hidden = !modeConfig(appMode)?.canReveal || state.completed;
-  els.revealClueButton.disabled = state.completed || state.clues.length >= Math.min(maxClues(), activeCase.totalClues);
-
   els.clueStack.innerHTML = state.clues
     .map((clue, index) => `
       <article class="clue-card">
@@ -621,7 +570,7 @@ function renderLibrary() {
 }
 
 function openResultModal() {
-  const answer = state.answer || answerDiagnosisStatic();
+  const answer = state.answer;
   resetPremiumPanel();
 
   els.resultEyebrow.textContent = state.won ? "Solved" : "Answer";
@@ -632,13 +581,9 @@ function openResultModal() {
     ? `${answer.name} (${answer.category})`
     : "Answer unavailable.";
   els.explanationBlock.innerHTML = `
-    <div class="explanation-card">
-      <p class="card-kicker">Why this fits</p>
-      <p>${escapeHtml(state.explanation || "Explanation available after backend validation.")}</p>
-    </div>
-    <div class="explanation-card">
-      <p class="card-kicker">Close differentials</p>
-      <p>${escapeHtml(formatFreeDifferentials(state.differentials))}</p>
+    <div class="explanation-card locked-summary">
+      <p class="card-kicker">Plus only</p>
+      <p>Detailed DSM-5-TR-aligned criteria guidance, differential diagnoses, and how to distinguish them are available only in the paid version.</p>
     </div>
   `;
   els.resultModal.showModal();
@@ -648,7 +593,7 @@ function resetPremiumPanel() {
   els.premiumContent.innerHTML = "";
   els.premiumStatus.textContent = apiMode
     ? "Paid version required. This section is requested from the backend only after Plus access is verified."
-    : "Plus requires the backend server. Static demo mode cannot unlock protected clinical breakdowns.";
+    : "Plus requires the backend server.";
   try {
     els.plusTokenInput.value = localStorage.getItem(plusTokenKey()) || "";
   } catch {
@@ -723,13 +668,6 @@ function renderPremiumContent(premium) {
       </ul>
     </section>
   `;
-}
-
-function formatFreeDifferentials(differentials) {
-  if (!Array.isArray(differentials) || !differentials.length) {
-    return "Differential guide available in Plus.";
-  }
-  return differentials.map((item) => typeof item === "string" ? item : item.name).filter(Boolean).join("; ");
 }
 
 function openStatsModal() {

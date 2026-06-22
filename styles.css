@@ -341,24 +341,6 @@ h3 {
   gap: 10px;
 }
 
-.tough-actions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  border: 1px solid rgba(242, 184, 75, 0.34);
-  border-radius: 8px;
-  background: rgba(242, 184, 75, 0.08);
-  padding: 12px;
-}
-
-.tough-actions p {
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.9rem;
-  line-height: 1.4;
-}
-
 .guess-form input,
 .library-search input {
   width: 100%;
@@ -734,14 +716,9 @@ h3 {
     grid-template-columns: 1fr;
   }
 
-  .tough-actions,
   .premium-controls {
     align-items: stretch;
     grid-template-columns: 1fr;
-  }
-
-  .tough-actions {
-    display: grid;
   }
 
   .guess-card {
