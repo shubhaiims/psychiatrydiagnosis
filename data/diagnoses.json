@@ -1,0 +1,408 @@
+{
+  "generatedAt": "2026-06-22T01:18:35.466Z",
+  "sourceNote": "Original educational DSM-5-TR-aligned summary. This is not verbatim DSM text, not clinically validated, and not medical advice.",
+  "diagnoses": [
+    {
+      "id": "acute-stress",
+      "code": "F43.0",
+      "name": "Acute Stress Disorder",
+      "category": "Trauma- and Stressor-Related Disorders",
+      "aliases": []
+    },
+    {
+      "id": "adjustment",
+      "code": "F43.20",
+      "name": "Adjustment Disorder",
+      "category": "Trauma- and Stressor-Related Disorders",
+      "aliases": []
+    },
+    {
+      "id": "agoraphobia",
+      "code": "F40.00",
+      "name": "Agoraphobia",
+      "category": "Anxiety Disorders",
+      "aliases": []
+    },
+    {
+      "id": "alcohol-use",
+      "code": "F10.20",
+      "name": "Alcohol Use Disorder",
+      "category": "Substance-Related and Addictive Disorders",
+      "aliases": [
+        "alcohol dependence",
+        "alcoholism",
+        "aud"
+      ]
+    },
+    {
+      "id": "anorexia",
+      "code": "F50.01",
+      "name": "Anorexia Nervosa",
+      "category": "Feeding and Eating Disorders",
+      "aliases": [
+        "anorexia",
+        "anorexia nervosa"
+      ]
+    },
+    {
+      "id": "antisocial-pd",
+      "code": "F60.2",
+      "name": "Antisocial Personality Disorder",
+      "category": "Personality Disorders",
+      "aliases": [
+        "aspd",
+        "antisocial personality"
+      ]
+    },
+    {
+      "id": "adhd",
+      "code": "F90.2",
+      "name": "Attention-Deficit/Hyperactivity Disorder",
+      "category": "Neurodevelopmental Disorders",
+      "aliases": [
+        "adhd",
+        "add",
+        "attention deficit hyperactivity disorder"
+      ]
+    },
+    {
+      "id": "autism",
+      "code": "F84.0",
+      "name": "Autism Spectrum Disorder",
+      "category": "Neurodevelopmental Disorders",
+      "aliases": [
+        "asd",
+        "autism",
+        "autistic spectrum disorder"
+      ]
+    },
+    {
+      "id": "avoidant-pd",
+      "code": "F60.6",
+      "name": "Avoidant Personality Disorder",
+      "category": "Personality Disorders",
+      "aliases": [
+        "avpd"
+      ]
+    },
+    {
+      "id": "arfid",
+      "code": "F50.82",
+      "name": "Avoidant/Restrictive Food Intake Disorder",
+      "category": "Feeding and Eating Disorders",
+      "aliases": [
+        "arfid"
+      ]
+    },
+    {
+      "id": "binge-eating",
+      "code": "F50.81",
+      "name": "Binge-Eating Disorder",
+      "category": "Feeding and Eating Disorders",
+      "aliases": [
+        "bed",
+        "binge eating disorder"
+      ]
+    },
+    {
+      "id": "bipolar-i",
+      "code": "F31.1",
+      "name": "Bipolar I Disorder",
+      "category": "Bipolar and Related Disorders",
+      "aliases": [
+        "bipolar 1",
+        "bipolar disorder type i",
+        "mania"
+      ]
+    },
+    {
+      "id": "bipolar-ii",
+      "code": "F31.81",
+      "name": "Bipolar II Disorder",
+      "category": "Bipolar and Related Disorders",
+      "aliases": [
+        "bipolar 2",
+        "bp ii",
+        "hypomania"
+      ]
+    },
+    {
+      "id": "body-dysmorphic",
+      "code": "F45.22",
+      "name": "Body Dysmorphic Disorder",
+      "category": "Obsessive-Compulsive and Related Disorders",
+      "aliases": [
+        "bdd",
+        "body dysmorphia"
+      ]
+    },
+    {
+      "id": "borderline-pd",
+      "code": "F60.3",
+      "name": "Borderline Personality Disorder",
+      "category": "Personality Disorders",
+      "aliases": [
+        "bpd",
+        "borderline personality"
+      ]
+    },
+    {
+      "id": "brief-psychotic",
+      "code": "F23",
+      "name": "Brief Psychotic Disorder",
+      "category": "Schizophrenia Spectrum and Other Psychotic Disorders",
+      "aliases": [
+        "brief psychosis"
+      ]
+    },
+    {
+      "id": "bulimia",
+      "code": "F50.2",
+      "name": "Bulimia Nervosa",
+      "category": "Feeding and Eating Disorders",
+      "aliases": [
+        "bulimia",
+        "bulimia nervosa"
+      ]
+    },
+    {
+      "id": "cannabis-use",
+      "code": "F12.20",
+      "name": "Cannabis Use Disorder",
+      "category": "Substance-Related and Addictive Disorders",
+      "aliases": [
+        "marijuana use disorder"
+      ]
+    },
+    {
+      "id": "cyclothymic",
+      "code": "F34.0",
+      "name": "Cyclothymic Disorder",
+      "category": "Bipolar and Related Disorders",
+      "aliases": [
+        "cyclothymia"
+      ]
+    },
+    {
+      "id": "delusional",
+      "code": "F22",
+      "name": "Delusional Disorder",
+      "category": "Schizophrenia Spectrum and Other Psychotic Disorders",
+      "aliases": [
+        "delusional disorder"
+      ]
+    },
+    {
+      "id": "gender-dysphoria",
+      "code": "F64.9",
+      "name": "Gender Dysphoria",
+      "category": "Gender Dysphoria",
+      "aliases": []
+    },
+    {
+      "id": "gad",
+      "code": "F41.1",
+      "name": "Generalized Anxiety Disorder",
+      "category": "Anxiety Disorders",
+      "aliases": [
+        "gad",
+        "generalised anxiety disorder",
+        "generalized anxiety"
+      ]
+    },
+    {
+      "id": "hoarding",
+      "code": "F42",
+      "name": "Hoarding Disorder",
+      "category": "Obsessive-Compulsive and Related Disorders",
+      "aliases": [
+        "hoarding"
+      ]
+    },
+    {
+      "id": "illness-anxiety",
+      "code": "F45.21",
+      "name": "Illness Anxiety Disorder",
+      "category": "Somatic Symptom and Related Disorders",
+      "aliases": [
+        "health anxiety",
+        "hypochondriasis",
+        "illness anxiety"
+      ]
+    },
+    {
+      "id": "insomnia",
+      "code": "G47.00",
+      "name": "Insomnia Disorder",
+      "category": "Sleep-Wake Disorders",
+      "aliases": [
+        "insomnia",
+        "chronic insomnia"
+      ]
+    },
+    {
+      "id": "mdd",
+      "code": "F33.1",
+      "name": "Major Depressive Disorder",
+      "category": "Depressive Disorders",
+      "aliases": [
+        "depression",
+        "major depression",
+        "mdd"
+      ]
+    },
+    {
+      "id": "narcissistic-pd",
+      "code": "F60.81",
+      "name": "Narcissistic Personality Disorder",
+      "category": "Personality Disorders",
+      "aliases": [
+        "npd"
+      ]
+    },
+    {
+      "id": "narcolepsy",
+      "code": "G47.419",
+      "name": "Narcolepsy",
+      "category": "Sleep-Wake Disorders",
+      "aliases": []
+    },
+    {
+      "id": "ocd",
+      "code": "F42",
+      "name": "Obsessive-Compulsive Disorder",
+      "category": "Obsessive-Compulsive and Related Disorders",
+      "aliases": [
+        "ocd",
+        "obsessive compulsive disorder"
+      ]
+    },
+    {
+      "id": "opioid-use",
+      "code": "F11.20",
+      "name": "Opioid Use Disorder",
+      "category": "Substance-Related and Addictive Disorders",
+      "aliases": [
+        "oud",
+        "opioid addiction",
+        "opioid dependence"
+      ]
+    },
+    {
+      "id": "panic",
+      "code": "F41.0",
+      "name": "Panic Disorder",
+      "category": "Anxiety Disorders",
+      "aliases": [
+        "panic attacks",
+        "panic disorder"
+      ]
+    },
+    {
+      "id": "persistent-depressive",
+      "code": "F34.1",
+      "name": "Persistent Depressive Disorder",
+      "category": "Depressive Disorders",
+      "aliases": [
+        "dysthymia",
+        "persistent depression"
+      ]
+    },
+    {
+      "id": "ptsd",
+      "code": "F43.10",
+      "name": "Posttraumatic Stress Disorder",
+      "category": "Trauma- and Stressor-Related Disorders",
+      "aliases": [
+        "ptsd",
+        "posttraumatic stress disorder",
+        "post-traumatic stress disorder"
+      ]
+    },
+    {
+      "id": "prolonged-grief",
+      "code": "F43.81",
+      "name": "Prolonged Grief Disorder",
+      "category": "Trauma- and Stressor-Related Disorders",
+      "aliases": [
+        "complicated grief",
+        "prolonged grief"
+      ]
+    },
+    {
+      "id": "schizoaffective",
+      "code": "F25.0",
+      "name": "Schizoaffective Disorder",
+      "category": "Schizophrenia Spectrum and Other Psychotic Disorders",
+      "aliases": [
+        "schizoaffective"
+      ]
+    },
+    {
+      "id": "schizophrenia",
+      "code": "F20.9",
+      "name": "Schizophrenia",
+      "category": "Schizophrenia Spectrum and Other Psychotic Disorders",
+      "aliases": [
+        "schizophrenia"
+      ]
+    },
+    {
+      "id": "schizophreniform",
+      "code": "F20.81",
+      "name": "Schizophreniform Disorder",
+      "category": "Schizophrenia Spectrum and Other Psychotic Disorders",
+      "aliases": [
+        "schizophreniform"
+      ]
+    },
+    {
+      "id": "social-anxiety",
+      "code": "F40.10",
+      "name": "Social Anxiety Disorder",
+      "category": "Anxiety Disorders",
+      "aliases": [
+        "social phobia",
+        "performance anxiety"
+      ]
+    },
+    {
+      "id": "somatic-symptom",
+      "code": "F45.1",
+      "name": "Somatic Symptom Disorder",
+      "category": "Somatic Symptom and Related Disorders",
+      "aliases": [
+        "somatic symptom disorder"
+      ]
+    },
+    {
+      "id": "specific-phobia",
+      "code": "F40.2",
+      "name": "Specific Phobia",
+      "category": "Anxiety Disorders",
+      "aliases": [
+        "phobia"
+      ]
+    },
+    {
+      "id": "stimulant-use",
+      "code": "F15.20",
+      "name": "Stimulant Use Disorder",
+      "category": "Substance-Related and Addictive Disorders",
+      "aliases": [
+        "methamphetamine use disorder",
+        "cocaine use disorder",
+        "stimulant addiction"
+      ]
+    },
+    {
+      "id": "tourette",
+      "code": "F95.2",
+      "name": "Tourette's Disorder",
+      "category": "Neurodevelopmental Disorders",
+      "aliases": [
+        "tourette syndrome"
+      ]
+    }
+  ]
+}

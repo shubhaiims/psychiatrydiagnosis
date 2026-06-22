@@ -1,259 +1,8 @@
 const MAX_GUESSES = 6;
+const TOUGH_GUESSES = 1;
 const MAX_CLUES = 6;
 const STORAGE_PREFIX = "psychiatrydiagnosis";
 const BASE_DATE = "2026-06-22";
-
-const DIAGNOSES = [
-  { id: "mdd", code: "F33.1", name: "Major Depressive Disorder", category: "Depressive Disorders", aliases: ["depression", "major depression", "mdd"] },
-  { id: "persistent-depressive", code: "F34.1", name: "Persistent Depressive Disorder", category: "Depressive Disorders", aliases: ["dysthymia", "persistent depression"] },
-  { id: "bipolar-i", code: "F31.1", name: "Bipolar I Disorder", category: "Bipolar and Related Disorders", aliases: ["bipolar 1", "bipolar disorder type i"] },
-  { id: "bipolar-ii", code: "F31.81", name: "Bipolar II Disorder", category: "Bipolar and Related Disorders", aliases: ["bipolar 2", "bp ii"] },
-  { id: "cyclothymic", code: "F34.0", name: "Cyclothymic Disorder", category: "Bipolar and Related Disorders", aliases: ["cyclothymia"] },
-  { id: "gad", code: "F41.1", name: "Generalized Anxiety Disorder", category: "Anxiety Disorders", aliases: ["gad", "generalised anxiety disorder"] },
-  { id: "panic", code: "F41.0", name: "Panic Disorder", category: "Anxiety Disorders", aliases: ["panic attacks"] },
-  { id: "social-anxiety", code: "F40.10", name: "Social Anxiety Disorder", category: "Anxiety Disorders", aliases: ["social phobia"] },
-  { id: "specific-phobia", code: "F40.2", name: "Specific Phobia", category: "Anxiety Disorders", aliases: ["phobia"] },
-  { id: "agoraphobia", code: "F40.00", name: "Agoraphobia", category: "Anxiety Disorders", aliases: [] },
-  { id: "ocd", code: "F42", name: "Obsessive-Compulsive Disorder", category: "Obsessive-Compulsive and Related Disorders", aliases: ["ocd"] },
-  { id: "body-dysmorphic", code: "F45.22", name: "Body Dysmorphic Disorder", category: "Obsessive-Compulsive and Related Disorders", aliases: ["bdd", "body dysmorphia"] },
-  { id: "hoarding", code: "F42", name: "Hoarding Disorder", category: "Obsessive-Compulsive and Related Disorders", aliases: [] },
-  { id: "ptsd", code: "F43.10", name: "Posttraumatic Stress Disorder", category: "Trauma- and Stressor-Related Disorders", aliases: ["ptsd", "post-traumatic stress disorder"] },
-  { id: "acute-stress", code: "F43.0", name: "Acute Stress Disorder", category: "Trauma- and Stressor-Related Disorders", aliases: [] },
-  { id: "adjustment", code: "F43.20", name: "Adjustment Disorder", category: "Trauma- and Stressor-Related Disorders", aliases: [] },
-  { id: "prolonged-grief", code: "F43.81", name: "Prolonged Grief Disorder", category: "Trauma- and Stressor-Related Disorders", aliases: ["complicated grief"] },
-  { id: "schizophrenia", code: "F20.9", name: "Schizophrenia", category: "Schizophrenia Spectrum and Other Psychotic Disorders", aliases: [] },
-  { id: "schizophreniform", code: "F20.81", name: "Schizophreniform Disorder", category: "Schizophrenia Spectrum and Other Psychotic Disorders", aliases: [] },
-  { id: "brief-psychotic", code: "F23", name: "Brief Psychotic Disorder", category: "Schizophrenia Spectrum and Other Psychotic Disorders", aliases: ["brief psychosis"] },
-  { id: "delusional", code: "F22", name: "Delusional Disorder", category: "Schizophrenia Spectrum and Other Psychotic Disorders", aliases: [] },
-  { id: "schizoaffective", code: "F25.0", name: "Schizoaffective Disorder", category: "Schizophrenia Spectrum and Other Psychotic Disorders", aliases: [] },
-  { id: "autism", code: "F84.0", name: "Autism Spectrum Disorder", category: "Neurodevelopmental Disorders", aliases: ["asd", "autism"] },
-  { id: "adhd", code: "F90.2", name: "Attention-Deficit/Hyperactivity Disorder", category: "Neurodevelopmental Disorders", aliases: ["adhd", "add"] },
-  { id: "tourette", code: "F95.2", name: "Tourette's Disorder", category: "Neurodevelopmental Disorders", aliases: ["tourette syndrome"] },
-  { id: "anorexia", code: "F50.01", name: "Anorexia Nervosa", category: "Feeding and Eating Disorders", aliases: ["anorexia"] },
-  { id: "bulimia", code: "F50.2", name: "Bulimia Nervosa", category: "Feeding and Eating Disorders", aliases: ["bulimia"] },
-  { id: "binge-eating", code: "F50.81", name: "Binge-Eating Disorder", category: "Feeding and Eating Disorders", aliases: ["bed"] },
-  { id: "arfid", code: "F50.82", name: "Avoidant/Restrictive Food Intake Disorder", category: "Feeding and Eating Disorders", aliases: ["arfid"] },
-  { id: "somatic-symptom", code: "F45.1", name: "Somatic Symptom Disorder", category: "Somatic Symptom and Related Disorders", aliases: [] },
-  { id: "illness-anxiety", code: "F45.21", name: "Illness Anxiety Disorder", category: "Somatic Symptom and Related Disorders", aliases: ["health anxiety"] },
-  { id: "borderline-pd", code: "F60.3", name: "Borderline Personality Disorder", category: "Personality Disorders", aliases: ["bpd"] },
-  { id: "antisocial-pd", code: "F60.2", name: "Antisocial Personality Disorder", category: "Personality Disorders", aliases: ["aspd"] },
-  { id: "avoidant-pd", code: "F60.6", name: "Avoidant Personality Disorder", category: "Personality Disorders", aliases: ["avpd"] },
-  { id: "narcissistic-pd", code: "F60.81", name: "Narcissistic Personality Disorder", category: "Personality Disorders", aliases: ["npd"] },
-  { id: "alcohol-use", code: "F10.20", name: "Alcohol Use Disorder", category: "Substance-Related and Addictive Disorders", aliases: ["alcohol dependence", "alcoholism"] },
-  { id: "opioid-use", code: "F11.20", name: "Opioid Use Disorder", category: "Substance-Related and Addictive Disorders", aliases: ["opioid addiction"] },
-  { id: "cannabis-use", code: "F12.20", name: "Cannabis Use Disorder", category: "Substance-Related and Addictive Disorders", aliases: ["marijuana use disorder"] },
-  { id: "stimulant-use", code: "F15.20", name: "Stimulant Use Disorder", category: "Substance-Related and Addictive Disorders", aliases: ["methamphetamine use disorder", "cocaine use disorder"] },
-  { id: "insomnia", code: "G47.00", name: "Insomnia Disorder", category: "Sleep-Wake Disorders", aliases: [] },
-  { id: "narcolepsy", code: "G47.419", name: "Narcolepsy", category: "Sleep-Wake Disorders", aliases: [] },
-  { id: "gender-dysphoria", code: "F64.9", name: "Gender Dysphoria", category: "Gender Dysphoria", aliases: [] }
-];
-
-const CASES = [
-  {
-    id: 1,
-    answerId: "prolonged-grief",
-    title: "Daily Case 1",
-    patient: "58-year-old woman",
-    clues: [
-      "A 58-year-old woman presents with fatigue and poor concentration at work.",
-      "Symptoms have persisted for 19 months and worsened after a major loss.",
-      "Her daughter says she still sets the dinner table for two every night.",
-      "She reports intense daily yearning for her late husband and says life feels empty without him.",
-      "She carries one of his folded handkerchiefs and becomes tearful when asked about future plans.",
-      "She denies wanting to die, but her grief remains pervasive long after the bereavement and is impairing work."
-    ],
-    explanation:
-      "The best fit is Prolonged Grief Disorder because the case centers on persistent, impairing yearning and preoccupation after bereavement, with grief-specific behavior and meaninglessness long after the death.",
-    differentials: ["Major Depressive Disorder", "Posttraumatic Stress Disorder", "Adjustment Disorder"]
-  },
-  {
-    id: 2,
-    answerId: "bipolar-i",
-    title: "Daily Case 2",
-    patient: "31-year-old man",
-    clues: [
-      "A 31-year-old man is brought by family because he has not slept much for several nights.",
-      "He is unusually energetic, loud, and insists he has discovered a guaranteed investment method.",
-      "He spent a large amount of money and tried to recruit strangers into his plan.",
-      "Speech is pressured, ideas shift quickly, and he becomes irritable when interrupted.",
-      "He believes a news anchor is sending him special encouragement through the television.",
-      "The episode required emergency evaluation because judgment, sleep, spending, and psychotic intensity became unsafe."
-    ],
-    explanation:
-      "The best fit is Bipolar I Disorder because the vignette describes a manic episode with decreased need for sleep, grandiosity, pressured speech, risky behavior, marked impairment, and psychotic features.",
-    differentials: ["Schizoaffective Disorder", "Substance/Medication-Induced Bipolar Disorder", "Delusional Disorder"]
-  },
-  {
-    id: 3,
-    answerId: "ocd",
-    title: "Daily Case 3",
-    patient: "26-year-old medical student",
-    clues: [
-      "A 26-year-old student reports arriving late because morning routines take hours.",
-      "The person fears contamination after touching door handles despite knowing the fear may be excessive.",
-      "Repeated washing temporarily reduces anxiety, but the fear returns quickly.",
-      "They also repeat mental phrases until they feel 'safe enough' to leave home.",
-      "The routines consume more than two hours daily and are interfering with classes and relationships.",
-      "There is no fixed delusional conviction; the patient is distressed by the thoughts and rituals."
-    ],
-    explanation:
-      "The best fit is Obsessive-Compulsive Disorder because intrusive contamination fears and repetitive washing or mental rituals are time-consuming, distressing, and impairing.",
-    differentials: ["Body Dysmorphic Disorder", "Illness Anxiety Disorder", "Generalized Anxiety Disorder"]
-  },
-  {
-    id: 4,
-    answerId: "schizophrenia",
-    title: "Daily Case 4",
-    patient: "22-year-old man",
-    clues: [
-      "A 22-year-old man has become socially withdrawn and stopped attending college.",
-      "Family notices reduced speech, poor self-care, and odd behavior over several months.",
-      "He reports hearing two unfamiliar voices commenting on his actions.",
-      "He believes neighbors installed devices to monitor his thoughts.",
-      "Symptoms have continued outside mood episodes and there is no clear substance trigger.",
-      "The pattern includes hallucinations, delusional beliefs, negative symptoms, functional decline, and a prolonged course."
-    ],
-    explanation:
-      "The best fit is Schizophrenia because the case combines persistent psychotic symptoms, negative symptoms, functional decline, and a course not limited to mood episodes.",
-    differentials: ["Schizophreniform Disorder", "Schizoaffective Disorder", "Substance-Induced Psychotic Disorder"]
-  },
-  {
-    id: 5,
-    answerId: "panic",
-    title: "Daily Case 5",
-    patient: "39-year-old teacher",
-    clues: [
-      "A 39-year-old teacher fears another sudden episode will happen during class.",
-      "Episodes peak within minutes and include palpitations, trembling, shortness of breath, and fear of dying.",
-      "Several attacks have occurred unexpectedly rather than only in one specific situation.",
-      "The person now avoids exercise, coffee, and driving alone because these sensations feel dangerous.",
-      "Medical evaluation has not found a cardiac explanation.",
-      "The main problem is recurrent unexpected panic attacks followed by persistent concern and behavioral avoidance."
-    ],
-    explanation:
-      "The best fit is Panic Disorder because recurrent unexpected panic attacks are followed by ongoing worry and maladaptive avoidance related to future attacks.",
-    differentials: ["Specific Phobia", "Agoraphobia", "Illness Anxiety Disorder"]
-  },
-  {
-    id: 6,
-    answerId: "anorexia",
-    title: "Daily Case 6",
-    patient: "19-year-old woman",
-    clues: [
-      "A 19-year-old college student is seen after roommates noticed fainting and marked weight loss.",
-      "She tracks every calorie, skips meals, and runs despite dizziness.",
-      "She says she feels 'too large' even though others are worried about how thin she is.",
-      "Menstrual periods have become irregular and she is cold most of the time.",
-      "She fears gaining weight and becomes distressed when asked to increase intake.",
-      "The core pattern is restriction leading to significantly low weight, fear of weight gain, and disturbed body experience."
-    ],
-    explanation:
-      "The best fit is Anorexia Nervosa because the vignette emphasizes restrictive intake, significantly low weight, intense fear of weight gain, and disturbed body image.",
-    differentials: ["Avoidant/Restrictive Food Intake Disorder", "Body Dysmorphic Disorder", "Major Depressive Disorder"]
-  },
-  {
-    id: 7,
-    answerId: "ptsd",
-    title: "Daily Case 7",
-    patient: "44-year-old paramedic",
-    clues: [
-      "A 44-year-old paramedic reports poor sleep and irritability after a fatal highway rescue.",
-      "The person has vivid nightmares and daytime episodes of feeling back at the scene.",
-      "They avoid the route where the crash occurred and refuse trauma-related assignments.",
-      "They remain constantly alert, sit near exits, and startle at sudden sounds.",
-      "Symptoms have lasted more than a month and have strained work and family life.",
-      "The presentation follows trauma exposure with intrusion, avoidance, negative mood changes, arousal, and impairment."
-    ],
-    explanation:
-      "The best fit is Posttraumatic Stress Disorder because trauma exposure is followed by intrusive re-experiencing, avoidance, hyperarousal, negative changes, duration, and impairment.",
-    differentials: ["Acute Stress Disorder", "Adjustment Disorder", "Panic Disorder"]
-  },
-  {
-    id: 8,
-    answerId: "borderline-pd",
-    title: "Daily Case 8",
-    patient: "28-year-old woman",
-    clues: [
-      "A 28-year-old woman describes intense relationships that shift rapidly from idealization to anger.",
-      "She reports chronic emptiness and panic when she thinks someone may leave.",
-      "There are impulsive spending episodes and recurrent self-injury during interpersonal crises.",
-      "Mood changes are rapid and reactive, often lasting hours rather than sustained episodes.",
-      "She says she is unsure who she really is and often feels unreal after arguments.",
-      "The long-standing pattern involves instability in relationships, self-image, affect, and impulse control."
-    ],
-    explanation:
-      "The best fit is Borderline Personality Disorder because the case describes a pervasive pattern of unstable relationships, abandonment fears, identity disturbance, affective instability, impulsivity, and self-injury.",
-    differentials: ["Bipolar II Disorder", "Posttraumatic Stress Disorder", "Histrionic Personality Disorder"]
-  },
-  {
-    id: 9,
-    answerId: "adhd",
-    title: "Daily Case 9",
-    patient: "15-year-old student",
-    clues: [
-      "A 15-year-old student is referred for unfinished assignments and disruptive restlessness.",
-      "Teachers describe careless mistakes, losing materials, and difficulty sustaining attention.",
-      "Parents say the pattern began in primary school and occurs at home and school.",
-      "The student interrupts, fidgets, leaves the seat, and struggles to wait turns.",
-      "There is no evidence that symptoms began only during a mood, psychotic, or substance-related episode.",
-      "The pattern is developmentally persistent inattention plus hyperactivity-impulsivity across settings with impairment."
-    ],
-    explanation:
-      "The best fit is Attention-Deficit/Hyperactivity Disorder because symptoms of inattention and hyperactivity-impulsivity began in childhood, occur across settings, and impair functioning.",
-    differentials: ["Specific Learning Disorder", "Generalized Anxiety Disorder", "Autism Spectrum Disorder"]
-  },
-  {
-    id: 10,
-    answerId: "somatic-symptom",
-    title: "Daily Case 10",
-    patient: "47-year-old man",
-    clues: [
-      "A 47-year-old man has repeated visits for abdominal discomfort and fatigue.",
-      "Evaluations find a mild chronic condition, but his level of fear and checking is much greater than expected.",
-      "He spends hours researching symptoms and seeks repeated reassurance.",
-      "Work is affected because he monitors bodily sensations throughout the day.",
-      "The distress focuses on symptoms themselves rather than fear of having no symptoms but a hidden disease.",
-      "The key feature is disproportionate thoughts, anxiety, and behaviors related to persistent somatic symptoms."
-    ],
-    explanation:
-      "The best fit is Somatic Symptom Disorder because persistent physical symptoms are accompanied by excessive health-related thoughts, anxiety, and behaviors that impair functioning.",
-    differentials: ["Illness Anxiety Disorder", "Generalized Anxiety Disorder", "Panic Disorder"]
-  },
-  {
-    id: 11,
-    answerId: "alcohol-use",
-    title: "Daily Case 11",
-    patient: "52-year-old man",
-    clues: [
-      "A 52-year-old man presents after missing work repeatedly.",
-      "He intended to cut down drinking but returns to heavy evening use after stressful days.",
-      "He spends weekends recovering and has stopped hobbies he previously enjoyed.",
-      "His spouse reports arguments, hiding bottles, and driving after drinking.",
-      "He has tremor and sweating in the morning that improve after alcohol.",
-      "The pattern includes impaired control, social impairment, risky use, tolerance or withdrawal, and continued use despite harm."
-    ],
-    explanation:
-      "The best fit is Alcohol Use Disorder because alcohol use is associated with impaired control, role impairment, risky behavior, continued use despite harm, and withdrawal-like symptoms.",
-    differentials: ["Major Depressive Disorder", "Generalized Anxiety Disorder", "Stimulant Use Disorder"]
-  },
-  {
-    id: 12,
-    answerId: "autism",
-    title: "Daily Case 12",
-    patient: "10-year-old child",
-    clues: [
-      "A 10-year-old child is evaluated for social difficulties and intense distress with schedule changes.",
-      "Parents report limited back-and-forth conversation and difficulty understanding peers' facial expressions.",
-      "The child prefers highly specific routines and becomes upset when a route or meal changes.",
-      "Interests are unusually intense and focused, with long monologues about transit maps.",
-      "Early developmental history included delayed pretend play and limited peer sharing.",
-      "The pattern includes persistent social communication differences plus restricted, repetitive behaviors from early development."
-    ],
-    explanation:
-      "The best fit is Autism Spectrum Disorder because the case includes early-emerging social communication differences and restricted, repetitive patterns of behavior, interests, and routines.",
-    differentials: ["Social Anxiety Disorder", "Attention-Deficit/Hyperactivity Disorder", "Social Pragmatic Communication Disorder"]
-  }
-];
 
 const els = {
   caseMeta: document.getElementById("caseMeta"),
@@ -271,6 +20,10 @@ const els = {
   statsButton: document.getElementById("statsButton"),
   shareButton: document.getElementById("shareButton"),
   resetButton: document.getElementById("resetButton"),
+  classicMode: document.getElementById("classicMode"),
+  toughMode: document.getElementById("toughMode"),
+  toughActions: document.getElementById("toughActions"),
+  revealClueButton: document.getElementById("revealClueButton"),
   resultModal: document.getElementById("resultModal"),
   closeResult: document.getElementById("closeResult"),
   modalClose: document.getElementById("modalClose"),
@@ -279,21 +32,181 @@ const els = {
   resultTitle: document.getElementById("resultTitle"),
   answerLine: document.getElementById("answerLine"),
   explanationBlock: document.getElementById("explanationBlock"),
+  premiumPanel: document.getElementById("premiumPanel"),
+  premiumStatus: document.getElementById("premiumStatus"),
+  plusTokenInput: document.getElementById("plusTokenInput"),
+  unlockPremium: document.getElementById("unlockPremium"),
+  premiumContent: document.getElementById("premiumContent"),
   statsModal: document.getElementById("statsModal"),
   closeStats: document.getElementById("closeStats"),
   statsGrid: document.getElementById("statsGrid"),
   distribution: document.getElementById("distribution")
 };
 
-let activeCase = getTodaysCase();
-let state = loadState();
+let diagnoses = [];
+let activeCase = null;
+let appMode = getStoredMode();
+let apiMode = false;
+let state = null;
 
-function getTodaysCase() {
-  const today = getLocalDate();
+bindEvents();
+init();
+
+async function init() {
+  setLoading(true);
+  try {
+    await loadCaseForMode(appMode);
+    state = loadState();
+    renderDiagnosisOptions();
+    render();
+    showMessage(apiMode ? "Backend case engine connected." : "Static demo mode. Run the backend for protected answers and Plus.");
+  } catch (error) {
+    showFatalLoadError(error);
+  } finally {
+    setLoading(false);
+  }
+}
+
+function bindEvents() {
+  els.guessForm.addEventListener("submit", submitGuess);
+  els.librarySearch.addEventListener("input", renderLibrary);
+  els.statsButton.addEventListener("click", openStatsModal);
+  els.shareButton.addEventListener("click", shareResult);
+  els.resetButton.addEventListener("click", resetCase);
+  els.modalShare.addEventListener("click", shareResult);
+  els.closeResult.addEventListener("click", () => els.resultModal.close());
+  els.modalClose.addEventListener("click", () => els.resultModal.close());
+  els.closeStats.addEventListener("click", () => els.statsModal.close());
+  els.revealClueButton.addEventListener("click", revealNextClue);
+  els.unlockPremium.addEventListener("click", unlockPremium);
+  els.classicMode.addEventListener("click", () => switchMode("classic"));
+  els.toughMode.addEventListener("click", () => switchMode("tough"));
+}
+
+async function loadCaseForMode(mode) {
+  try {
+    await loadFromBackend(mode);
+    apiMode = true;
+  } catch {
+    await loadFromStaticFiles(mode);
+    apiMode = false;
+  }
+}
+
+async function loadFromBackend(mode) {
+  const date = getLocalDate();
+  const [diagnosisPayload, casePayload] = await Promise.all([
+    fetchJson("/api/diagnoses"),
+    fetchJson(`/api/cases/today?mode=${encodeURIComponent(mode)}&date=${encodeURIComponent(date)}`)
+  ]);
+  diagnoses = diagnosisPayload.diagnoses || [];
+  activeCase = normalizeCase(casePayload.case, false);
+}
+
+async function loadFromStaticFiles(mode) {
+  const [diagnosisResponse, caseResponse] = await Promise.all([
+    fetch("data/diagnoses.json", { cache: "no-store" }),
+    fetch("data/static-cases.json", { cache: "no-store" })
+  ]);
+  if (!diagnosisResponse.ok || !caseResponse.ok) {
+    throw new Error("Case data is not available.");
+  }
+
+  const diagnosisPayload = await diagnosisResponse.json();
+  const casePayload = await caseResponse.json();
+  diagnoses = diagnosisPayload.diagnoses || diagnosisPayload || [];
+  const cases = casePayload.cases || casePayload || [];
+  activeCase = normalizeCase(selectCaseForDate(cases, mode), true);
+}
+
+function normalizeCase(caseRecord, includeAnswer) {
+  if (!caseRecord) {
+    throw new Error("No case returned.");
+  }
+
+  const allClues = Array.isArray(caseRecord.clues) ? caseRecord.clues.slice(0, MAX_CLUES) : [];
+  const firstClue = allClues[0] ? [allClues[0]] : [];
+
+  return {
+    id: caseRecord.id,
+    caseNumber: caseRecord.caseNumber || caseRecord.id,
+    title: caseRecord.title || `Case ${caseRecord.id}`,
+    patient: caseRecord.patient || "Patient",
+    difficulty: Number(caseRecord.difficulty || 3),
+    totalClues: Number(caseRecord.totalClues || allClues.length || MAX_CLUES),
+    clues: firstClue,
+    allClues: includeAnswer ? allClues : null,
+    answerId: includeAnswer ? caseRecord.answerId : null,
+    explanation: includeAnswer ? caseRecord.explanation : "",
+    differentials: includeAnswer ? caseRecord.differentials || [] : []
+  };
+}
+
+function selectCaseForDate(cases, mode) {
+  const pool = mode === "tough"
+    ? cases.filter((caseRecord) => Number(caseRecord.difficulty || 0) >= 3)
+    : cases;
+  const usablePool = pool.length ? pool : cases;
+  const days = daysSinceBase(getLocalDate());
+  const offset = mode === "tough" ? 397 : 0;
+  return usablePool[(days + offset) % usablePool.length];
+}
+
+function daysSinceBase(dateString) {
   const start = new Date(`${BASE_DATE}T00:00:00`);
-  const current = new Date(`${today}T00:00:00`);
-  const diff = Math.max(0, Math.floor((current - start) / 86400000));
-  return CASES[diff % CASES.length];
+  const current = new Date(`${dateString}T00:00:00`);
+  return Math.max(0, Math.floor((current - start) / 86400000));
+}
+
+async function fetchJson(url, options = {}) {
+  const response = await fetch(url, {
+    cache: "no-store",
+    ...options,
+    headers: {
+      ...(options.body ? { "Content-Type": "application/json" } : {}),
+      ...(options.headers || {})
+    }
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(payload.error || `Request failed: ${response.status}`);
+  }
+  return payload;
+}
+
+async function switchMode(mode) {
+  if (mode === appMode || !["classic", "tough"].includes(mode)) return;
+  appMode = mode;
+  saveStoredMode(mode);
+  setLoading(true);
+  showMessage("Loading mode...");
+  try {
+    await loadCaseForMode(mode);
+    state = loadState();
+    renderDiagnosisOptions();
+    render();
+    showMessage(mode === "tough" ? "Tough Mode loaded. Reveal clues carefully." : "Classic Mode loaded.");
+  } catch (error) {
+    showMessage(`Could not switch modes: ${error.message}`);
+  } finally {
+    setLoading(false);
+  }
+}
+
+function getStoredMode() {
+  try {
+    return localStorage.getItem(`${STORAGE_PREFIX}:mode`) || "classic";
+  } catch {
+    return "classic";
+  }
+}
+
+function saveStoredMode(mode) {
+  try {
+    localStorage.setItem(`${STORAGE_PREFIX}:mode`, mode);
+  } catch {
+    // Ignore private browsing storage failures.
+  }
 }
 
 function getLocalDate() {
@@ -305,11 +218,15 @@ function getLocalDate() {
 }
 
 function storageKey() {
-  return `${STORAGE_PREFIX}:case:${getLocalDate()}:${activeCase.id}`;
+  return `${STORAGE_PREFIX}:case:${getLocalDate()}:${appMode}:${activeCase?.id || "pending"}`;
 }
 
 function statsKey() {
   return `${STORAGE_PREFIX}:stats`;
+}
+
+function plusTokenKey() {
+  return `${STORAGE_PREFIX}:plus-token`;
 }
 
 function normalize(value) {
@@ -323,46 +240,67 @@ function normalize(value) {
 function findDiagnosis(input) {
   const target = normalize(input);
   if (!target) return null;
-  return DIAGNOSES.find((diagnosis) => {
-    const names = [diagnosis.name, diagnosis.code, ...diagnosis.aliases];
+  return diagnoses.find((diagnosis) => {
+    const names = [diagnosis.name, diagnosis.code, ...(diagnosis.aliases || [])];
     return names.some((name) => normalize(name) === target);
   }) || null;
 }
 
-function answerDiagnosis() {
-  return DIAGNOSES.find((diagnosis) => diagnosis.id === activeCase.answerId);
+function answerDiagnosisStatic() {
+  if (!activeCase?.answerId) return null;
+  return diagnoses.find((diagnosis) => diagnosis.id === activeCase.answerId) || null;
+}
+
+function maxGuessesForMode() {
+  return appMode === "tough" ? TOUGH_GUESSES : MAX_GUESSES;
 }
 
 function createInitialState() {
+  const clues = activeCase?.clues?.length ? activeCase.clues.slice(0, 1) : [];
   return {
-    caseId: activeCase.id,
+    mode: appMode,
+    caseId: activeCase?.id || null,
     date: getLocalDate(),
-    revealedClues: 1,
+    revealedClues: Math.max(1, clues.length),
+    clues,
     guesses: [],
     completed: false,
-    won: false
+    won: false,
+    answer: null,
+    explanation: "",
+    differentials: []
   };
 }
 
 function loadState() {
+  const base = createInitialState();
   try {
     const parsed = JSON.parse(localStorage.getItem(storageKey()));
-    if (parsed?.caseId === activeCase.id && parsed?.date === getLocalDate()) {
+    if (parsed?.caseId === activeCase.id && parsed?.date === getLocalDate() && parsed?.mode === appMode) {
+      const clues = Array.isArray(parsed.clues) && parsed.clues.length
+        ? parsed.clues.slice(0, MAX_CLUES)
+        : base.clues;
       return {
-        ...createInitialState(),
+        ...base,
         ...parsed,
-        revealedClues: Math.max(1, Math.min(MAX_CLUES, parsed.revealedClues || 1)),
-        guesses: Array.isArray(parsed.guesses) ? parsed.guesses : []
+        revealedClues: Math.max(1, Math.min(MAX_CLUES, Number(parsed.revealedClues || clues.length || 1))),
+        clues,
+        guesses: Array.isArray(parsed.guesses) ? parsed.guesses : [],
+        differentials: Array.isArray(parsed.differentials) ? parsed.differentials : []
       };
     }
   } catch {
     // Ignore corrupt local state.
   }
-  return createInitialState();
+  return base;
 }
 
 function saveState() {
-  localStorage.setItem(storageKey(), JSON.stringify(state));
+  try {
+    localStorage.setItem(storageKey(), JSON.stringify(state));
+  } catch {
+    // Ignore storage quota or private mode failures.
+  }
 }
 
 function loadStats() {
@@ -392,35 +330,35 @@ function loadStats() {
 }
 
 function saveStats(stats) {
-  localStorage.setItem(statsKey(), JSON.stringify(stats));
-}
-
-function completeGame(won) {
-  if (state.completed) return;
-  state.completed = true;
-  state.won = won;
-  state.revealedClues = Math.min(MAX_CLUES, Math.max(state.revealedClues, state.guesses.length || 1));
-  saveState();
-
-  const stats = loadStats();
-  if (stats.lastPlayed !== state.date) {
-    stats.played += 1;
-    stats.lastPlayed = state.date;
-    if (won) {
-      stats.wins += 1;
-      stats.streak += 1;
-      stats.maxStreak = Math.max(stats.maxStreak, stats.streak);
-      const guessNo = String(Math.max(1, state.guesses.length));
-      stats.distribution[guessNo] = Number(stats.distribution[guessNo] || 0) + 1;
-    } else {
-      stats.streak = 0;
-    }
-    saveStats(stats);
+  try {
+    localStorage.setItem(statsKey(), JSON.stringify(stats));
+  } catch {
+    // Ignore storage failures.
   }
 }
 
-function submitGuess(event) {
+function recordStats() {
+  const stats = loadStats();
+  const playId = `${state.date}:${state.mode}:${state.caseId}`;
+  if (stats.lastPlayed === playId) return;
+
+  stats.played += 1;
+  stats.lastPlayed = playId;
+  if (state.won) {
+    stats.wins += 1;
+    stats.streak += 1;
+    stats.maxStreak = Math.max(stats.maxStreak, stats.streak);
+    const guessNo = String(Math.max(1, state.guesses.length));
+    stats.distribution[guessNo] = Number(stats.distribution[guessNo] || 0) + 1;
+  } else {
+    stats.streak = 0;
+  }
+  saveStats(stats);
+}
+
+async function submitGuess(event) {
   event.preventDefault();
+  if (!activeCase || !state) return;
   if (state.completed) {
     showMessage("This case is already complete.");
     return;
@@ -435,52 +373,163 @@ function submitGuess(event) {
     showMessage("Already guessed. Try a different diagnosis.");
     return;
   }
-
-  const answer = answerDiagnosis();
-  const correct = diagnosis.id === answer.id;
-  const near = !correct && diagnosis.category === answer.category;
-  state.guesses.push({
-    id: diagnosis.id,
-    name: diagnosis.name,
-    category: diagnosis.category,
-    correct,
-    near
-  });
-
-  if (correct) {
-    completeGame(true);
-    showMessage("Correct. Nice clinical reasoning.");
-    openResultModal();
-  } else if (state.guesses.length >= MAX_GUESSES) {
-    state.revealedClues = MAX_CLUES;
-    completeGame(false);
-    showMessage("No more guesses. Review the explanation.");
-    openResultModal();
-  } else {
-    state.revealedClues = Math.min(MAX_CLUES, state.revealedClues + 1);
-    saveState();
-    showMessage(near ? "Same diagnostic category. Getting warmer." : "Not the best fit yet. New clue revealed.");
+  if (state.guesses.length >= maxGuessesForMode()) {
+    showMessage("No guesses remain for this mode.");
+    return;
   }
 
-  els.guessInput.value = "";
-  render();
+  setFormBusy(true);
+  try {
+    const result = apiMode
+      ? await submitGuessToBackend(diagnosis)
+      : resolveStaticGuess(diagnosis);
+
+    state.guesses.push({
+      id: diagnosis.id,
+      name: diagnosis.name,
+      category: diagnosis.category,
+      correct: Boolean(result.correct),
+      near: Boolean(result.near)
+    });
+
+    if (!result.completed && result.nextClue) {
+      addClue(result.nextClue);
+    }
+
+    if (result.completed) {
+      state.completed = true;
+      state.won = Boolean(result.correct);
+      state.answer = result.answer || answerDiagnosisStatic();
+      state.explanation = result.explanation || activeCase.explanation || "";
+      state.differentials = result.differentials || activeCase.differentials || [];
+      if (!state.won && Array.isArray(result.allClues)) {
+        state.clues = result.allClues.slice(0, MAX_CLUES);
+        state.revealedClues = state.clues.length;
+      }
+      recordStats();
+      showMessage(state.won ? "Correct. Nice clinical reasoning." : "Case complete. Review the explanation.");
+      openResultModal();
+    } else {
+      showMessage(result.near ? "Same diagnostic family. Getting warmer." : "Not the best fit yet. New clue revealed.");
+    }
+
+    els.guessInput.value = "";
+    saveState();
+    render();
+  } catch (error) {
+    showMessage(error.message || "Could not check that guess.");
+  } finally {
+    setFormBusy(false);
+  }
+}
+
+async function submitGuessToBackend(diagnosis) {
+  return fetchJson("/api/guess", {
+    method: "POST",
+    body: JSON.stringify({
+      caseId: activeCase.id,
+      mode: appMode,
+      diagnosisId: diagnosis.id,
+      revealedClues: state.clues.length,
+      guessedDiagnosisIds: [...state.guesses.map((guess) => guess.id), diagnosis.id]
+    })
+  });
+}
+
+function resolveStaticGuess(diagnosis) {
+  const answer = answerDiagnosisStatic();
+  if (!answer) {
+    throw new Error("Static answer data is unavailable.");
+  }
+  const correct = diagnosis.id === answer.id;
+  const near = !correct && diagnosis.category === answer.category;
+  const guessCount = state.guesses.length + 1;
+  const completed = correct || appMode === "tough" || guessCount >= maxGuessesForMode();
+  const nextClue = !completed && activeCase.allClues
+    ? activeCase.allClues[state.clues.length]
+    : null;
+
+  return {
+    correct,
+    near,
+    completed,
+    nextClue,
+    answer,
+    explanation: completed ? activeCase.explanation : "",
+    differentials: completed ? activeCase.differentials : [],
+    allClues: completed ? activeCase.allClues : null
+  };
+}
+
+async function revealNextClue() {
+  if (!state || state.completed || appMode !== "tough") return;
+  if (state.clues.length >= Math.min(MAX_CLUES, activeCase.totalClues)) {
+    showMessage("All clues are already revealed.");
+    return;
+  }
+
+  els.revealClueButton.disabled = true;
+  try {
+    const result = apiMode
+      ? await fetchJson("/api/reveal", {
+          method: "POST",
+          body: JSON.stringify({ caseId: activeCase.id, revealedClues: state.clues.length })
+        })
+      : { clue: activeCase.allClues?.[state.clues.length] };
+
+    if (result.clue) {
+      addClue(result.clue);
+      saveState();
+      render();
+      showMessage("New clue revealed. Your diagnosis is still final in Tough Mode.");
+    } else {
+      showMessage("No more clues available.");
+    }
+  } catch (error) {
+    showMessage(error.message || "Could not reveal another clue.");
+  } finally {
+    els.revealClueButton.disabled = false;
+  }
+}
+
+function addClue(clue) {
+  if (!clue || state.clues.includes(clue)) return;
+  state.clues = [...state.clues, clue].slice(0, MAX_CLUES);
+  state.revealedClues = state.clues.length;
 }
 
 function showMessage(message) {
-  els.formMessage.textContent = message;
+  els.formMessage.textContent = message || "";
+}
+
+function setLoading(isLoading) {
+  els.guessInput.disabled = isLoading || Boolean(state?.completed);
+  els.guessForm.querySelector("button").disabled = isLoading || Boolean(state?.completed);
+  els.revealClueButton.disabled = isLoading;
+}
+
+function setFormBusy(isBusy) {
+  els.guessInput.disabled = isBusy || Boolean(state?.completed);
+  els.guessForm.querySelector("button").disabled = isBusy || Boolean(state?.completed);
 }
 
 function render() {
-  const answer = answerDiagnosis();
-  const today = getLocalDate();
-  els.caseMeta.textContent = `${activeCase.title} / ${today} / ${activeCase.patient}`;
-  els.clueCounter.textContent = `${state.revealedClues} / ${MAX_CLUES}`;
-  els.guessCounter.textContent = `${state.guesses.length} / ${MAX_GUESSES}`;
+  if (!activeCase || !state) return;
+
+  const sourceLabel = apiMode ? "backend protected" : "static demo";
+  const modeLabel = appMode === "tough" ? "Tough Mode" : "Classic Mode";
+  els.caseMeta.textContent = `${activeCase.title} / ${getLocalDate()} / ${activeCase.patient} / ${modeLabel} / ${sourceLabel}`;
+  els.clueCounter.textContent = `${state.clues.length} / ${activeCase.totalClues || MAX_CLUES}`;
+  els.guessCounter.textContent = `${state.guesses.length} / ${maxGuessesForMode()}`;
   els.resultBadge.textContent = state.completed ? (state.won ? "Solved" : "Missed") : "In progress";
   els.resultBadge.style.color = state.completed ? (state.won ? "var(--green)" : "var(--red)") : "var(--ink)";
 
-  els.clueStack.innerHTML = activeCase.clues
-    .slice(0, state.revealedClues)
+  els.classicMode.classList.toggle("is-active", appMode === "classic");
+  els.toughMode.classList.toggle("is-active", appMode === "tough");
+  els.toughActions.hidden = appMode !== "tough" || state.completed;
+  els.revealClueButton.disabled = state.completed || state.clues.length >= Math.min(MAX_CLUES, activeCase.totalClues);
+
+  els.clueStack.innerHTML = state.clues
     .map((clue, index) => `
       <article class="clue-card">
         <div class="clue-head">
@@ -493,7 +542,7 @@ function render() {
     .join("");
 
   els.guessList.innerHTML = state.guesses.length
-    ? state.guesses.map((guess, index) => renderGuess(guess, index, answer)).join("")
+    ? state.guesses.map((guess, index) => renderGuess(guess, index)).join("")
     : "";
 
   els.guessInput.disabled = state.completed;
@@ -501,14 +550,14 @@ function render() {
   renderLibrary();
 }
 
-function renderGuess(guess, index, answer) {
+function renderGuess(guess, index) {
   const status = guess.correct ? "correct" : guess.near ? "near" : "wrong";
   const mark = guess.correct ? "OK" : guess.near ? "~" : "x";
   const feedback = guess.correct
     ? "Correct diagnosis."
     : guess.near
-      ? "Same DSM-5-TR diagnostic category as the answer."
-      : `Different category. Answer category is not ${guess.category}.`;
+      ? "Same DSM-5-TR diagnostic family as the answer."
+      : "Not the best fit for this case.";
 
   return `
     <article class="guess-card ${status}">
@@ -517,51 +566,143 @@ function renderGuess(guess, index, answer) {
         <div class="guess-name">${index + 1}. ${escapeHtml(guess.name)}</div>
         <p class="guess-feedback">${escapeHtml(feedback)}</p>
       </div>
-      <div class="guess-category">${escapeHtml(guess.correct ? answer.category : guess.category)}</div>
+      <div class="guess-category">${escapeHtml(guess.category)}</div>
     </article>
   `;
 }
 
 function renderDiagnosisOptions() {
-  els.diagnosisOptions.innerHTML = DIAGNOSES.map((diagnosis) => `
+  els.diagnosisOptions.innerHTML = diagnoses.map((diagnosis) => `
     <option value="${escapeAttr(diagnosis.name)}">${escapeHtml(diagnosis.category)}</option>
   `).join("");
 }
 
 function renderLibrary() {
   const query = normalize(els.librarySearch.value);
-  const filtered = DIAGNOSES.filter((diagnosis) => {
+  const filtered = diagnoses.filter((diagnosis) => {
     if (!query) return true;
-    return [diagnosis.name, diagnosis.category, diagnosis.code, ...diagnosis.aliases]
+    return [diagnosis.name, diagnosis.category, diagnosis.code, ...(diagnosis.aliases || [])]
       .some((value) => normalize(value).includes(query));
-  }).slice(0, 80);
+  }).slice(0, 90);
 
   els.diagnosisLibrary.innerHTML = filtered.map((diagnosis) => `
     <div class="library-item">
       <strong>${escapeHtml(diagnosis.name)}</strong>
-      <span>${escapeHtml(diagnosis.category)} / ${escapeHtml(diagnosis.code)}</span>
+      <span>${escapeHtml(diagnosis.category)} / ${escapeHtml(diagnosis.code || "DSM-5-TR")}</span>
     </div>
   `).join("");
 }
 
 function openResultModal() {
-  const answer = answerDiagnosis();
+  const answer = state.answer || answerDiagnosisStatic();
+  resetPremiumPanel();
+
   els.resultEyebrow.textContent = state.won ? "Solved" : "Answer";
   els.resultTitle.textContent = state.won
     ? `Solved in ${state.guesses.length} guess${state.guesses.length === 1 ? "" : "es"}`
     : "Better luck next case";
-  els.answerLine.textContent = `${answer.name} (${answer.category})`;
+  els.answerLine.textContent = answer
+    ? `${answer.name} (${answer.category})`
+    : "Answer unavailable.";
   els.explanationBlock.innerHTML = `
     <div class="explanation-card">
       <p class="card-kicker">Why this fits</p>
-      <p>${escapeHtml(activeCase.explanation)}</p>
+      <p>${escapeHtml(state.explanation || "Explanation available after backend validation.")}</p>
     </div>
     <div class="explanation-card">
       <p class="card-kicker">Close differentials</p>
-      <p>${escapeHtml(activeCase.differentials.join("; "))}</p>
+      <p>${escapeHtml(formatFreeDifferentials(state.differentials))}</p>
     </div>
   `;
   els.resultModal.showModal();
+}
+
+function resetPremiumPanel() {
+  els.premiumContent.innerHTML = "";
+  els.premiumStatus.textContent = apiMode
+    ? "Paid version required. This section is requested from the backend only after Plus access is verified."
+    : "Plus requires the backend server. Static demo mode cannot unlock protected clinical breakdowns.";
+  try {
+    els.plusTokenInput.value = localStorage.getItem(plusTokenKey()) || "";
+  } catch {
+    els.plusTokenInput.value = "";
+  }
+}
+
+async function unlockPremium() {
+  if (!state?.completed || !state.answer) {
+    els.premiumStatus.textContent = "Finish the case before requesting the Plus breakdown.";
+    return;
+  }
+  if (!apiMode) {
+    els.premiumStatus.textContent = "Run the backend server to verify Plus access.";
+    return;
+  }
+
+  const token = els.plusTokenInput.value.trim();
+  if (!token) {
+    els.premiumStatus.textContent = "Enter a Plus access token.";
+    return;
+  }
+
+  els.unlockPremium.disabled = true;
+  els.premiumStatus.textContent = "Verifying Plus access...";
+  try {
+    const premium = await fetchJson(`/api/premium/diagnosis/${encodeURIComponent(state.answer.id)}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    try {
+      localStorage.setItem(plusTokenKey(), token);
+    } catch {
+      // Ignore storage failures.
+    }
+    renderPremiumContent(premium);
+    els.premiumStatus.textContent = premium.sourceNote || "Unlocked. Educational summary, not verbatim DSM text.";
+  } catch (error) {
+    els.premiumStatus.textContent = error.message || "Plus access could not be verified.";
+    els.premiumContent.innerHTML = `<div class="locked">Plus content remains locked.</div>`;
+  } finally {
+    els.unlockPremium.disabled = false;
+  }
+}
+
+function renderPremiumContent(premium) {
+  const criteria = Array.isArray(premium.criteriaGuide) ? premium.criteriaGuide : [];
+  const differentials = Array.isArray(premium.differentials) ? premium.differentials : [];
+  const howToDifferentiate = Array.isArray(premium.howToDifferentiate) ? premium.howToDifferentiate : [];
+
+  els.premiumContent.innerHTML = `
+    <section>
+      <p class="card-kicker">Criteria guide</p>
+      <ul class="criteria-list">
+        ${criteria.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+      </ul>
+    </section>
+    <section>
+      <p class="card-kicker">Differentials</p>
+      <div class="differential-list">
+        ${differentials.map((item) => `
+          <article>
+            <strong>${escapeHtml(item.name)}</strong>
+            <p>${escapeHtml(item.distinguishingFeatures || item.distinguish || "")}</p>
+          </article>
+        `).join("")}
+      </div>
+    </section>
+    <section>
+      <p class="card-kicker">How to differentiate</p>
+      <ul class="criteria-list">
+        ${howToDifferentiate.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+      </ul>
+    </section>
+  `;
+}
+
+function formatFreeDifferentials(differentials) {
+  if (!Array.isArray(differentials) || !differentials.length) {
+    return "Differential guide available in Plus.";
+  }
+  return differentials.map((item) => typeof item === "string" ? item : item.name).filter(Boolean).join("; ");
 }
 
 function openStatsModal() {
@@ -598,10 +739,11 @@ function buildShareText() {
   const tiles = state.guesses.map((guess) => guess.correct ? "G" : guess.near ? "Y" : "B").join("");
   const line = state.completed
     ? state.won
-      ? `${state.guesses.length}/${MAX_GUESSES}`
-      : `X/${MAX_GUESSES}`
-    : `${state.guesses.length}/${MAX_GUESSES}`;
-  return `Psychiatry Diagnosis #${activeCase.id} ${line}\n${tiles || "_"}\n${location.origin}${location.pathname}`;
+      ? `${state.guesses.length}/${maxGuessesForMode()}`
+      : `X/${maxGuessesForMode()}`
+    : `${state.guesses.length}/${maxGuessesForMode()}`;
+  const modeLabel = appMode === "tough" ? "Tough" : "Classic";
+  return `Psychiatry Diagnosis ${modeLabel} #${activeCase.caseNumber} ${line}\n${tiles || "_"}\n${location.origin}${location.pathname}`;
 }
 
 async function shareResult() {
@@ -619,11 +761,24 @@ async function shareResult() {
 }
 
 function resetCase() {
-  if (!confirm("Reset today's saved game on this device?")) return;
+  if (!activeCase || !confirm("Reset today's saved game on this device?")) return;
   localStorage.removeItem(storageKey());
   state = createInitialState();
   showMessage("");
   render();
+}
+
+function showFatalLoadError(error) {
+  els.caseMeta.textContent = "Case engine could not load.";
+  els.clueStack.innerHTML = `
+    <article class="clue-card">
+      <div class="clue-head">
+        <span class="clue-number">!</span>
+        <span class="clue-title">Setup needed</span>
+      </div>
+      <p class="clue-text">${escapeHtml(error.message || "Run npm run train:cases and npm start.")}</p>
+    </article>
+  `;
 }
 
 function escapeHtml(value) {
@@ -638,16 +793,3 @@ function escapeHtml(value) {
 function escapeAttr(value) {
   return escapeHtml(value);
 }
-
-els.guessForm.addEventListener("submit", submitGuess);
-els.librarySearch.addEventListener("input", renderLibrary);
-els.statsButton.addEventListener("click", openStatsModal);
-els.shareButton.addEventListener("click", shareResult);
-els.resetButton.addEventListener("click", resetCase);
-els.modalShare.addEventListener("click", shareResult);
-els.closeResult.addEventListener("click", () => els.resultModal.close());
-els.modalClose.addEventListener("click", () => els.resultModal.close());
-els.closeStats.addEventListener("click", () => els.statsModal.close());
-
-renderDiagnosisOptions();
-render();

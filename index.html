@@ -6,7 +6,7 @@
     <title>Psychiatry Diagnosis | DSM-5-TR Guessing Game</title>
     <meta
       name="description"
-      content="A daily educational psychiatry diagnosis guessing game using DSM-5-TR diagnostic labels and original case clues."
+      content="A tougher daily educational psychiatry diagnosis guessing game with backend-fed DSM-5-TR diagnostic labels and original fictional cases."
     >
     <link rel="stylesheet" href="styles.css">
   </head>
@@ -35,8 +35,19 @@
         <div class="title-block">
           <p class="eyebrow">Daily clinical reasoning challenge</p>
           <h1>What is the most likely DSM-5-TR diagnosis?</h1>
-          <p class="subtitle" id="caseMeta">Loading today's case...</p>
+          <p class="subtitle" id="caseMeta">Loading case from backend...</p>
         </div>
+
+        <section class="mode-toggle" aria-label="Game mode">
+          <button class="mode-button is-active" id="classicMode" type="button" data-mode="classic">
+            <strong>Classic</strong>
+            <span>Six guesses. Wrong answers reveal clues.</span>
+          </button>
+          <button class="mode-button" id="toughMode" type="button" data-mode="tough">
+            <strong>Tough</strong>
+            <span>Click to reveal clues. One final answer.</span>
+          </button>
+        </section>
 
         <section class="mode-strip" aria-label="Game status">
           <div>
@@ -54,6 +65,11 @@
         </section>
 
         <section class="clue-stack" id="clueStack" aria-live="polite"></section>
+
+        <div class="tough-actions" id="toughActions" hidden>
+          <button class="text-button" id="revealClueButton" type="button">Reveal next clue</button>
+          <p>Reveal only what you need. In Tough Mode, submitting a diagnosis is final.</p>
+        </div>
 
         <form class="guess-form" id="guessForm">
           <label class="sr-only" for="guessInput">Enter a possible DSM-5-TR diagnosis</label>
@@ -76,10 +92,10 @@
         <section class="panel">
           <h2>How To Play</h2>
           <ol class="compact-list">
-            <li>Read the first patient clue.</li>
-            <li>Guess the DSM-5-TR diagnosis from the search box.</li>
-            <li>Each wrong guess reveals a more specific clue.</li>
-            <li>You have 6 clues and 6 guesses.</li>
+            <li>Classic mode gives 6 guesses and reveals a new clue after each miss.</li>
+            <li>Tough mode lets you click for more clues, but your first diagnosis is final.</li>
+            <li>The frontend asks the backend for cases, clue reveals, and guess validation.</li>
+            <li>Plus-only clinical breakdowns are loaded only after paid access is verified.</li>
           </ol>
         </section>
 
@@ -110,6 +126,23 @@
         <h2 id="resultTitle">Case complete</h2>
         <p id="answerLine" class="answer-line"></p>
         <div class="explanation-block" id="explanationBlock"></div>
+
+        <section class="premium-panel" id="premiumPanel">
+          <div>
+            <p class="card-kicker">Plus clinical breakdown</p>
+            <h3>DSM-5-TR-aligned criteria guide, differentials, and how to distinguish them</h3>
+            <p id="premiumStatus">
+              Paid version required. This section is requested from the backend only after Plus access is verified.
+            </p>
+          </div>
+          <div class="premium-controls">
+            <label class="sr-only" for="plusTokenInput">Plus access token</label>
+            <input id="plusTokenInput" type="password" placeholder="Plus access token">
+            <button class="primary-button" id="unlockPremium" type="button">Unlock Plus</button>
+          </div>
+          <div class="premium-content" id="premiumContent"></div>
+        </section>
+
         <div class="modal-actions">
           <button class="primary-button" id="modalShare" type="button">Share</button>
           <button class="text-button" id="modalClose" type="button">Close</button>
@@ -130,7 +163,7 @@
 
     <footer class="footer-note">
       DSM-5-TR is a trademarked publication of the American Psychiatric Association.
-      This independent educational game uses original fictional cases and diagnostic labels only.
+      This independent educational game uses original fictional cases, diagnostic labels, and non-verbatim educational summaries.
     </footer>
 
     <script src="app.js" defer></script>

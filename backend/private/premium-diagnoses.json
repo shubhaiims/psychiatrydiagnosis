@@ -1,0 +1,1028 @@
+{
+  "generatedAt": "2026-06-22T01:18:35.466Z",
+  "diagnoses": {
+    "mdd": {
+      "diagnosisId": "mdd",
+      "code": "F33.1",
+      "name": "Major Depressive Disorder",
+      "category": "Depressive Disorders",
+      "sourceNote": "Original educational DSM-5-TR-aligned summary. This is not verbatim DSM text, not clinically validated, and not medical advice.",
+      "criteriaGuide": [
+        "Look for a distinct depressive episode lasting at least two weeks with depressed mood or loss of interest as a central feature.",
+        "Supportive symptoms commonly include sleep or appetite change, low energy, guilt or worthlessness, slowed or agitated movement, poor concentration, and thoughts of death.",
+        "The episode should cause clinically important distress or impairment.",
+        "Substances, medical causes, bereavement alone, and other primary disorders should not better explain the presentation.",
+        "A past manic or hypomanic episode moves the diagnosis toward a bipolar disorder."
+      ],
+      "differentials": [
+        {
+          "name": "Persistent Depressive Disorder",
+          "distinguishingFeatures": "Chronic depressed mood is present for years, often with fewer episode-like peaks, while major depression is a discrete symptom-dense episode."
+        },
+        {
+          "name": "Bipolar II Disorder",
+          "distinguishingFeatures": "A history of hypomanic episodes changes the diagnosis even when the current presentation is depressive."
+        },
+        {
+          "name": "Adjustment Disorder",
+          "distinguishingFeatures": "Mood symptoms follow a stressor but do not meet the full syndrome, duration, or severity expected in a major depressive episode."
+        }
+      ],
+      "howToDifferentiate": [
+        "Ask for any lifetime period of elevated or irritable mood with increased energy before calling it unipolar depression.",
+        "Establish whether the low mood is episodic or a long-standing baseline pattern.",
+        "Screen for substances, endocrine disease, grief-focused yearning, psychosis, and trauma-specific symptoms."
+      ]
+    },
+    "persistent-depressive": {
+      "diagnosisId": "persistent-depressive",
+      "code": "F34.1",
+      "name": "Persistent Depressive Disorder",
+      "category": "Depressive Disorders",
+      "sourceNote": "Original educational DSM-5-TR-aligned summary. This is not verbatim DSM text, not clinically validated, and not medical advice.",
+      "criteriaGuide": [
+        "The central pattern is chronically depressed mood for years, with a shorter duration threshold in children and adolescents.",
+        "Associated symptoms can include appetite or sleep disturbance, low energy, low self-esteem, poor concentration, and hopelessness.",
+        "Symptoms should be present more days than not and not disappear for long symptom-free stretches.",
+        "The pattern must cause distress or impairment and should not be due to substances, medical illness, or bipolar disorder.",
+        "Major depressive episodes can coexist, but the persistent low mood course remains the organizing feature."
+      ],
+      "differentials": [
+        {
+          "name": "Major Depressive Disorder",
+          "distinguishingFeatures": "Major depression is usually an episode; persistent depressive disorder is defined by chronicity over years."
+        },
+        {
+          "name": "Bipolar II Disorder",
+          "distinguishingFeatures": "Past hypomania rules against a purely unipolar chronic depressive diagnosis."
+        },
+        {
+          "name": "Avoidant Personality Disorder",
+          "distinguishingFeatures": "Avoidant personality centers on pervasive social inhibition and rejection sensitivity rather than chronic depressed mood itself."
+        }
+      ],
+      "howToDifferentiate": [
+        "Map the timeline carefully: years of low mood support persistent depressive disorder.",
+        "Ask whether there were two-month stretches of normal mood.",
+        "Assess for superimposed major depressive episodes without losing sight of the chronic baseline."
+      ]
+    },
+    "bipolar-i": {
+      "diagnosisId": "bipolar-i",
+      "code": "F31.1",
+      "name": "Bipolar I Disorder",
+      "category": "Bipolar and Related Disorders",
+      "sourceNote": "Original educational DSM-5-TR-aligned summary. This is not verbatim DSM text, not clinically validated, and not medical advice.",
+      "criteriaGuide": [
+        "At least one manic episode is the key requirement.",
+        "Mania involves elevated, expansive, or irritable mood plus increased energy or activity.",
+        "Typical associated signs include decreased need for sleep, grandiosity, pressured speech, racing thoughts, distractibility, increased goal-directed activity, and risky behavior.",
+        "The episode is severe enough to cause marked impairment, hospitalization, psychosis, or serious danger.",
+        "Substances, medications, and medical causes should be evaluated before assigning the diagnosis."
+      ],
+      "differentials": [
+        {
+          "name": "Bipolar II Disorder",
+          "distinguishingFeatures": "Bipolar II has hypomania, not full mania. Psychosis or hospitalization during elevated mood indicates mania."
+        },
+        {
+          "name": "Schizoaffective Disorder",
+          "distinguishingFeatures": "Schizoaffective disorder includes psychosis outside mood episodes and mood episodes across much of the illness."
+        },
+        {
+          "name": "Stimulant Use Disorder",
+          "distinguishingFeatures": "Stimulant intoxication can mimic mania, so timing with substance use and toxicology matter."
+        }
+      ],
+      "howToDifferentiate": [
+        "Confirm decreased need for sleep rather than insomnia with fatigue.",
+        "Ask collateral informants about baseline change, risk, spending, and hospitalization.",
+        "Separate mood-congruent psychosis during mania from persistent psychosis outside mood episodes."
+      ]
+    },
+    "bipolar-ii": {
+      "diagnosisId": "bipolar-ii",
+      "code": "F31.81",
+      "name": "Bipolar II Disorder",
+      "category": "Bipolar and Related Disorders",
+      "sourceNote": "Original educational DSM-5-TR-aligned summary. This is not verbatim DSM text, not clinically validated, and not medical advice.",
+      "criteriaGuide": [
+        "The pattern requires at least one hypomanic episode and at least one major depressive episode.",
+        "Hypomania includes elevated or irritable mood with increased energy and observable behavioral change.",
+        "Hypomanic symptoms last for several days and include features such as reduced sleep need, talkativeness, racing thoughts, distractibility, goal-directed activity, or risk-taking.",
+        "Hypomania is not severe enough to cause marked impairment, hospitalization, or psychosis.",
+        "A lifetime manic episode changes the diagnosis to Bipolar I Disorder."
+      ],
+      "differentials": [
+        {
+          "name": "Major Depressive Disorder",
+          "distinguishingFeatures": "Major depression lacks spontaneous hypomanic episodes."
+        },
+        {
+          "name": "Bipolar I Disorder",
+          "distinguishingFeatures": "Any manic episode, including psychosis during elevation, supports Bipolar I rather than Bipolar II."
+        },
+        {
+          "name": "Borderline Personality Disorder",
+          "distinguishingFeatures": "Borderline mood shifts are often rapid and interpersonal; hypomania is episodic, sustained for days, and includes increased energy."
+        }
+      ],
+      "howToDifferentiate": [
+        "Use timeline interviews to distinguish days-long hypomania from hour-to-hour reactivity.",
+        "Ask about decreased need for sleep with preserved energy.",
+        "Check whether elevated episodes caused psychosis, hospitalization, or dangerous impairment."
+      ]
+    },
+    "cyclothymic": {
+      "diagnosisId": "cyclothymic",
+      "code": "F34.0",
+      "name": "Cyclothymic Disorder",
+      "category": "Bipolar and Related Disorders",
+      "sourceNote": "Original educational DSM-5-TR-aligned summary. This is not verbatim DSM text, not clinically validated, and not medical advice.",
+      "criteriaGuide": [
+        "The central pattern is long-term fluctuation between hypomanic symptoms and depressive symptoms.",
+        "The symptoms are numerous and persistent but do not meet full criteria for manic, hypomanic, or major depressive episodes.",
+        "The pattern should last years in adults, with a shorter threshold in children and adolescents.",
+        "Symptoms cause distress or impairment and are not better explained by substances, medical conditions, or another disorder.",
+        "If a full manic, hypomanic, or major depressive episode appears, reconsider the diagnosis."
+      ],
+      "differentials": [
+        {
+          "name": "Bipolar II Disorder",
+          "distinguishingFeatures": "Bipolar II requires a clear hypomanic episode and a major depressive episode; cyclothymia remains subthreshold."
+        },
+        {
+          "name": "Borderline Personality Disorder",
+          "distinguishingFeatures": "Borderline symptoms are often interpersonal and identity-based, while cyclothymia is a chronic mood-cycling pattern."
+        },
+        {
+          "name": "Persistent Depressive Disorder",
+          "distinguishingFeatures": "Persistent depressive disorder does not include recurring hypomanic symptom periods."
+        }
+      ],
+      "howToDifferentiate": [
+        "Build a multi-year mood chart rather than relying on a single visit.",
+        "Check whether highs or lows ever met full episode thresholds.",
+        "Separate trait-like interpersonal instability from rhythmic mood activation and low mood."
+      ]
+    },
+    "gad": {
+      "diagnosisId": "gad",
+      "code": "F41.1",
+      "name": "Generalized Anxiety Disorder",
+      "category": "Anxiety Disorders",
+      "sourceNote": "Original educational DSM-5-TR-aligned summary. This is not verbatim DSM text, not clinically validated, and not medical advice.",
+      "criteriaGuide": [
+        "The core feature is excessive anxiety and worry across several areas of life.",
+        "The worry is difficult to control and persists over time.",
+        "Common associated symptoms include restlessness, fatigue, poor concentration, irritability, muscle tension, and sleep disturbance.",
+        "The worry causes distress or impairment.",
+        "The anxiety is not better explained by panic attacks, social scrutiny, obsessions, trauma reminders, substances, or medical causes."
+      ],
+      "differentials": [
+        {
+          "name": "Panic Disorder",
+          "distinguishingFeatures": "Panic disorder centers on recurrent unexpected panic attacks and worry about more attacks, not broad everyday worry."
+        },
+        {
+          "name": "Social Anxiety Disorder",
+          "distinguishingFeatures": "Social anxiety is mainly fear of scrutiny or negative evaluation."
+        },
+        {
+          "name": "Obsessive-Compulsive Disorder",
+          "distinguishingFeatures": "OCD includes intrusive obsessions and compulsions; GAD worry is usually about real-life concerns."
+        }
+      ],
+      "howToDifferentiate": [
+        "Ask whether worry is broad or tied to one feared situation.",
+        "Clarify whether thoughts feel like everyday concerns or intrusive obsessions.",
+        "Assess duration, controllability, and physical tension."
+      ]
+    },
+    "panic": {
+      "diagnosisId": "panic",
+      "code": "F41.0",
+      "name": "Panic Disorder",
+      "category": "Anxiety Disorders",
+      "sourceNote": "Original educational DSM-5-TR-aligned summary. This is not verbatim DSM text, not clinically validated, and not medical advice.",
+      "criteriaGuide": [
+        "The central feature is recurrent unexpected panic attacks.",
+        "Panic attacks are abrupt surges of intense fear or discomfort with prominent physical and cognitive symptoms.",
+        "After attacks, the person has persistent concern about more attacks or changes behavior to avoid them.",
+        "The symptoms should not be better explained by substances, medical illness, or another anxiety disorder.",
+        "Situationally bound attacks can occur, but unexpected attacks are important for the diagnosis."
+      ],
+      "differentials": [
+        {
+          "name": "Agoraphobia",
+          "distinguishingFeatures": "Agoraphobia centers on feared difficulty escaping or getting help in certain situations; panic disorder centers on unexpected panic attacks."
+        },
+        {
+          "name": "Specific Phobia",
+          "distinguishingFeatures": "Specific phobia attacks are tied to a specific object or situation."
+        },
+        {
+          "name": "Illness Anxiety Disorder",
+          "distinguishingFeatures": "Illness anxiety involves fear of having a disease, not primarily fear of recurrent panic surges."
+        }
+      ],
+      "howToDifferentiate": [
+        "Ask whether attacks happen out of the blue.",
+        "Identify what the patient fears after the attack: another panic attack, a disease, social humiliation, or inability to escape.",
+        "Rule out arrhythmia, thyroid disease, substances, and medication effects."
+      ]
+    },
+    "social-anxiety": {
+      "diagnosisId": "social-anxiety",
+      "code": "F40.10",
+      "name": "Social Anxiety Disorder",
+      "category": "Anxiety Disorders",
+      "sourceNote": "Original educational DSM-5-TR-aligned summary. This is not verbatim DSM text, not clinically validated, and not medical advice.",
+      "criteriaGuide": [
+        "The key fear is social scrutiny or negative evaluation.",
+        "Social or performance situations reliably provoke anxiety and are avoided or endured with distress.",
+        "The fear is persistent and out of proportion to the actual threat.",
+        "Symptoms cause impairment in school, work, relationships, or other roles.",
+        "Consider whether autism, body dysmorphic concerns, panic disorder, or medical conditions better explain the avoidance."
+      ],
+      "differentials": [
+        {
+          "name": "Generalized Anxiety Disorder",
+          "distinguishingFeatures": "GAD worry is broad across many domains, while social anxiety is focused on evaluation."
+        },
+        {
+          "name": "Panic Disorder",
+          "distinguishingFeatures": "Panic disorder involves unexpected attacks; social anxiety attacks are cued by scrutiny."
+        },
+        {
+          "name": "Autism Spectrum Disorder",
+          "distinguishingFeatures": "Autism includes early social communication differences and restricted patterns, not only fear of judgment."
+        }
+      ],
+      "howToDifferentiate": [
+        "Ask what would be catastrophic: embarrassment, panic symptoms, rejection, or inability to escape.",
+        "Check whether social difficulty began as skill differences in early development.",
+        "Look for avoidance patterns across conversations, eating in public, presentations, and dating."
+      ]
+    },
+    "ocd": {
+      "diagnosisId": "ocd",
+      "code": "F42",
+      "name": "Obsessive-Compulsive Disorder",
+      "category": "Obsessive-Compulsive and Related Disorders",
+      "sourceNote": "Original educational DSM-5-TR-aligned summary. This is not verbatim DSM text, not clinically validated, and not medical advice.",
+      "criteriaGuide": [
+        "Obsessions are intrusive, unwanted thoughts, urges, or images that cause anxiety or distress.",
+        "Compulsions are repetitive behaviors or mental acts performed to reduce distress or prevent a feared outcome.",
+        "The obsessions or compulsions are time-consuming or cause impairment.",
+        "Symptoms should not be better explained by substances, medical illness, or another disorder with a narrower focus.",
+        "Insight can range from good to absent, but the obsession-compulsion cycle remains central."
+      ],
+      "differentials": [
+        {
+          "name": "Generalized Anxiety Disorder",
+          "distinguishingFeatures": "GAD worry is about real-life concerns and lacks ritualized compulsions."
+        },
+        {
+          "name": "Body Dysmorphic Disorder",
+          "distinguishingFeatures": "BDD focuses on perceived appearance defects with checking or camouflaging."
+        },
+        {
+          "name": "Illness Anxiety Disorder",
+          "distinguishingFeatures": "Illness anxiety centers on fear of disease rather than diverse obsessions and compulsions."
+        }
+      ],
+      "howToDifferentiate": [
+        "Ask what happens if the ritual is prevented.",
+        "Identify whether the repeated act is neutralizing an intrusive thought.",
+        "Clarify the content focus: contamination, harm, symmetry, appearance, health, or hoarding."
+      ]
+    },
+    "body-dysmorphic": {
+      "diagnosisId": "body-dysmorphic",
+      "code": "F45.22",
+      "name": "Body Dysmorphic Disorder",
+      "category": "Obsessive-Compulsive and Related Disorders",
+      "sourceNote": "Original educational DSM-5-TR-aligned summary. This is not verbatim DSM text, not clinically validated, and not medical advice.",
+      "criteriaGuide": [
+        "The central feature is preoccupation with perceived appearance defects that are not observable or appear slight to others.",
+        "Repetitive behaviors or mental acts occur, such as checking, comparing, grooming, camouflaging, or reassurance-seeking.",
+        "The preoccupation causes distress or impairment.",
+        "If concerns focus primarily on weight or body fat in the context of eating disturbance, consider an eating disorder.",
+        "Insight can vary, including delusional-level conviction."
+      ],
+      "differentials": [
+        {
+          "name": "Obsessive-Compulsive Disorder",
+          "distinguishingFeatures": "OCD has broader obsessional themes; BDD is organized around perceived appearance flaws."
+        },
+        {
+          "name": "Social Anxiety Disorder",
+          "distinguishingFeatures": "Social anxiety focuses on evaluation generally; BDD focuses on being seen as defective."
+        },
+        {
+          "name": "Anorexia Nervosa",
+          "distinguishingFeatures": "Anorexia centers on low weight, restriction, and fear of weight gain rather than one perceived defect."
+        }
+      ],
+      "howToDifferentiate": [
+        "Ask whether the main concern is a specific perceived flaw or general negative evaluation.",
+        "Screen for restriction, low weight, bingeing, purging, and fear of weight gain.",
+        "Assess repetitive appearance behaviors and time spent checking or camouflaging."
+      ]
+    },
+    "hoarding": {
+      "diagnosisId": "hoarding",
+      "code": "F42",
+      "name": "Hoarding Disorder",
+      "category": "Obsessive-Compulsive and Related Disorders",
+      "sourceNote": "Original educational DSM-5-TR-aligned summary. This is not verbatim DSM text, not clinically validated, and not medical advice.",
+      "criteriaGuide": [
+        "The core feature is persistent difficulty discarding possessions, regardless of their actual value.",
+        "The difficulty is driven by perceived need to save items and distress about discarding them.",
+        "Accumulation clutters active living spaces and compromises their intended use.",
+        "The pattern causes distress, impairment, or safety problems.",
+        "Consider medical, neurocognitive, depressive, psychotic, and OCD explanations before assigning the diagnosis."
+      ],
+      "differentials": [
+        {
+          "name": "Obsessive-Compulsive Disorder",
+          "distinguishingFeatures": "OCD saving is often driven by intrusive feared consequences; hoarding centers on saving value and distress discarding."
+        },
+        {
+          "name": "Major Depressive Disorder",
+          "distinguishingFeatures": "Depression may reduce cleaning but does not usually produce persistent saving beliefs and discarding distress."
+        },
+        {
+          "name": "Neurocognitive Disorder",
+          "distinguishingFeatures": "Cognitive decline may cause clutter with memory and executive deficits rather than long-standing saving attachment."
+        }
+      ],
+      "howToDifferentiate": [
+        "Inspect whether living spaces can be used as intended.",
+        "Ask what makes discarding distressing.",
+        "Check for acquiring behavior, safety hazards, insight level, and cognitive decline."
+      ]
+    },
+    "ptsd": {
+      "diagnosisId": "ptsd",
+      "code": "F43.10",
+      "name": "Posttraumatic Stress Disorder",
+      "category": "Trauma- and Stressor-Related Disorders",
+      "sourceNote": "Original educational DSM-5-TR-aligned summary. This is not verbatim DSM text, not clinically validated, and not medical advice.",
+      "criteriaGuide": [
+        "A qualifying traumatic exposure is required.",
+        "Intrusion symptoms may include unwanted memories, nightmares, flashbacks, or intense distress to reminders.",
+        "Avoidance involves efforts to avoid trauma-related memories, feelings, people, places, or situations.",
+        "Negative mood or cognition changes and arousal symptoms are part of the pattern.",
+        "Duration extends beyond one month and the symptoms cause distress or impairment."
+      ],
+      "differentials": [
+        {
+          "name": "Acute Stress Disorder",
+          "distinguishingFeatures": "Acute stress disorder occurs in the first month after trauma; PTSD persists beyond that window."
+        },
+        {
+          "name": "Adjustment Disorder",
+          "distinguishingFeatures": "Adjustment disorder follows a stressor but lacks the full PTSD trauma exposure and symptom cluster pattern."
+        },
+        {
+          "name": "Panic Disorder",
+          "distinguishingFeatures": "Panic disorder centers on unexpected panic attacks, not trauma-linked intrusions and avoidance."
+        }
+      ],
+      "howToDifferentiate": [
+        "Confirm that the stressor meets trauma exposure requirements.",
+        "Organize symptoms into intrusion, avoidance, negative mood/cognition, and arousal clusters.",
+        "Date onset and duration carefully to separate acute stress disorder from PTSD."
+      ]
+    },
+    "prolonged-grief": {
+      "diagnosisId": "prolonged-grief",
+      "code": "F43.81",
+      "name": "Prolonged Grief Disorder",
+      "category": "Trauma- and Stressor-Related Disorders",
+      "sourceNote": "Original educational DSM-5-TR-aligned summary. This is not verbatim DSM text, not clinically validated, and not medical advice.",
+      "criteriaGuide": [
+        "The central pattern is persistent grief after the death of someone close.",
+        "Core symptoms include intense yearning or preoccupation with the deceased.",
+        "Associated features can include identity disruption, disbelief, avoidance, emotional pain, difficulty moving on, numbness, or meaninglessness.",
+        "The duration is longer than expected for acute grief and must be considered in cultural context.",
+        "Symptoms cause impairment and are not better explained by major depression, PTSD, or another disorder."
+      ],
+      "differentials": [
+        {
+          "name": "Major Depressive Disorder",
+          "distinguishingFeatures": "Major depression is organized around pervasive depressed mood or anhedonia; prolonged grief is organized around yearning and separation distress."
+        },
+        {
+          "name": "Posttraumatic Stress Disorder",
+          "distinguishingFeatures": "PTSD centers on threat-based intrusions and avoidance; prolonged grief centers on loss and longing."
+        },
+        {
+          "name": "Adjustment Disorder",
+          "distinguishingFeatures": "Adjustment disorder is less specific and usually less persistent than prolonged grief disorder."
+        }
+      ],
+      "howToDifferentiate": [
+        "Ask whether the main pain is yearning for the deceased or generalized hopeless depression.",
+        "Clarify cultural mourning expectations and duration.",
+        "Separate trauma fear memories from grief-focused longing and identity disruption."
+      ]
+    },
+    "schizophrenia": {
+      "diagnosisId": "schizophrenia",
+      "code": "F20.9",
+      "name": "Schizophrenia",
+      "category": "Schizophrenia Spectrum and Other Psychotic Disorders",
+      "sourceNote": "Original educational DSM-5-TR-aligned summary. This is not verbatim DSM text, not clinically validated, and not medical advice.",
+      "criteriaGuide": [
+        "Core symptoms include delusions, hallucinations, disorganized speech, disorganized or catatonic behavior, and negative symptoms.",
+        "A sufficient number and type of active-phase symptoms must be present.",
+        "The illness includes a prolonged course with functional decline or impairment.",
+        "Mood episodes, if present, do not account for most of the active and residual illness.",
+        "Rule out substances, medical causes, and developmental communication disorders."
+      ],
+      "differentials": [
+        {
+          "name": "Schizophreniform Disorder",
+          "distinguishingFeatures": "Schizophreniform disorder has the same symptom style but lasts less than the schizophrenia duration threshold."
+        },
+        {
+          "name": "Schizoaffective Disorder",
+          "distinguishingFeatures": "Schizoaffective disorder has major mood episodes present for much of the illness plus psychosis outside mood episodes."
+        },
+        {
+          "name": "Delusional Disorder",
+          "distinguishingFeatures": "Delusional disorder has non-bizarre or bizarre delusions without broad disorganization, negative symptoms, or marked functional decline."
+        }
+      ],
+      "howToDifferentiate": [
+        "Create a timeline of psychotic symptoms, mood episodes, and functional decline.",
+        "Ask collateral sources about negative symptoms and baseline deterioration.",
+        "Rule out substances, seizures, endocrine disease, and medication effects."
+      ]
+    },
+    "schizophreniform": {
+      "diagnosisId": "schizophreniform",
+      "code": "F20.81",
+      "name": "Schizophreniform Disorder",
+      "category": "Schizophrenia Spectrum and Other Psychotic Disorders",
+      "sourceNote": "Original educational DSM-5-TR-aligned summary. This is not verbatim DSM text, not clinically validated, and not medical advice.",
+      "criteriaGuide": [
+        "Symptoms resemble schizophrenia active-phase symptoms.",
+        "The duration is more than one month but less than six months.",
+        "Functional decline may occur but is not required in the same way as schizophrenia.",
+        "Mood episodes should not better account for the psychosis.",
+        "Substance and medical causes must be excluded."
+      ],
+      "differentials": [
+        {
+          "name": "Brief Psychotic Disorder",
+          "distinguishingFeatures": "Brief psychotic disorder lasts less than one month with eventual return toward baseline."
+        },
+        {
+          "name": "Schizophrenia",
+          "distinguishingFeatures": "Schizophrenia requires longer total duration and typically includes functional decline."
+        },
+        {
+          "name": "Schizoaffective Disorder",
+          "distinguishingFeatures": "Schizoaffective disorder requires major mood episodes for much of the illness and psychosis outside mood episodes."
+        }
+      ],
+      "howToDifferentiate": [
+        "Date first psychotic symptom and current duration precisely.",
+        "Track whether mood syndromes are present for most of the illness.",
+        "Monitor longitudinally because the diagnosis may change with duration."
+      ]
+    },
+    "schizoaffective": {
+      "diagnosisId": "schizoaffective",
+      "code": "F25.0",
+      "name": "Schizoaffective Disorder",
+      "category": "Schizophrenia Spectrum and Other Psychotic Disorders",
+      "sourceNote": "Original educational DSM-5-TR-aligned summary. This is not verbatim DSM text, not clinically validated, and not medical advice.",
+      "criteriaGuide": [
+        "There are schizophrenia-spectrum symptoms along with a major mood episode during part of the illness.",
+        "There is also a period of delusions or hallucinations without a major mood episode.",
+        "Mood episodes are present for a substantial portion of the total illness.",
+        "Symptoms are not due to substances or medical conditions.",
+        "Specify bipolar type when mania is part of the presentation and depressive type when only major depression is present."
+      ],
+      "differentials": [
+        {
+          "name": "Schizophrenia",
+          "distinguishingFeatures": "In schizophrenia, mood episodes are absent or present for a minority of the illness."
+        },
+        {
+          "name": "Bipolar I Disorder",
+          "distinguishingFeatures": "Psychosis in bipolar disorder occurs during mood episodes, not for extended periods outside them."
+        },
+        {
+          "name": "Major Depressive Disorder with Psychotic Features",
+          "distinguishingFeatures": "Psychosis appears only during depressive episodes."
+        }
+      ],
+      "howToDifferentiate": [
+        "Draw a timeline with psychosis above the line and mood episodes below it.",
+        "Look specifically for at least two weeks of hallucinations or delusions without syndromal mood symptoms.",
+        "Estimate whether mood episodes occupy a substantial portion of the full illness."
+      ]
+    },
+    "delusional": {
+      "diagnosisId": "delusional",
+      "code": "F22",
+      "name": "Delusional Disorder",
+      "category": "Schizophrenia Spectrum and Other Psychotic Disorders",
+      "sourceNote": "Original educational DSM-5-TR-aligned summary. This is not verbatim DSM text, not clinically validated, and not medical advice.",
+      "criteriaGuide": [
+        "The central feature is one or more delusions lasting at least a month.",
+        "Criteria for schizophrenia are not met.",
+        "Functioning is not markedly impaired apart from the impact of the delusion, and behavior is not obviously bizarre overall.",
+        "Mood episodes, if present, are brief relative to the delusional periods.",
+        "Substances, medical illness, OCD, and body dysmorphic disorder should be considered."
+      ],
+      "differentials": [
+        {
+          "name": "Schizophrenia",
+          "distinguishingFeatures": "Schizophrenia includes broader symptoms such as hallucinations, disorganization, negative symptoms, and decline."
+        },
+        {
+          "name": "Obsessive-Compulsive Disorder",
+          "distinguishingFeatures": "OCD thoughts are intrusive and tied to rituals even when insight is poor."
+        },
+        {
+          "name": "Body Dysmorphic Disorder",
+          "distinguishingFeatures": "Appearance-focused delusional conviction is classified within BDD when the full BDD pattern is present."
+        }
+      ],
+      "howToDifferentiate": [
+        "Assess breadth of psychotic symptoms beyond the single belief.",
+        "Check functioning outside the delusional theme.",
+        "Identify whether the belief is better understood as obsessional, appearance-focused, or mood-congruent psychosis."
+      ]
+    },
+    "autism": {
+      "diagnosisId": "autism",
+      "code": "F84.0",
+      "name": "Autism Spectrum Disorder",
+      "category": "Neurodevelopmental Disorders",
+      "sourceNote": "Original educational DSM-5-TR-aligned summary. This is not verbatim DSM text, not clinically validated, and not medical advice.",
+      "criteriaGuide": [
+        "Persistent social communication and social interaction differences are required.",
+        "Restricted, repetitive patterns of behavior, interests, activities, sensory responses, or routines are also required.",
+        "Symptoms begin in early development, though they may become clearer when demands increase.",
+        "Symptoms cause clinically important impairment.",
+        "Intellectual disability, language disorder, ADHD, anxiety, and social pragmatic communication disorder should be considered."
+      ],
+      "differentials": [
+        {
+          "name": "Social Anxiety Disorder",
+          "distinguishingFeatures": "Social anxiety is driven by fear of evaluation; autism involves early social communication differences and restricted patterns."
+        },
+        {
+          "name": "Attention-Deficit/Hyperactivity Disorder",
+          "distinguishingFeatures": "ADHD explains inattention and impulsivity but not the full reciprocity plus restricted-interest profile."
+        },
+        {
+          "name": "Social Pragmatic Communication Disorder",
+          "distinguishingFeatures": "This condition lacks the restricted or repetitive behavior domain required for autism."
+        }
+      ],
+      "howToDifferentiate": [
+        "Take a developmental history from caregivers when possible.",
+        "Ask about sensory sensitivities, routines, and focused interests.",
+        "Separate fear-driven avoidance from skill and reciprocity differences."
+      ]
+    },
+    "adhd": {
+      "diagnosisId": "adhd",
+      "code": "F90.2",
+      "name": "Attention-Deficit/Hyperactivity Disorder",
+      "category": "Neurodevelopmental Disorders",
+      "sourceNote": "Original educational DSM-5-TR-aligned summary. This is not verbatim DSM text, not clinically validated, and not medical advice.",
+      "criteriaGuide": [
+        "The pattern includes persistent inattention and/or hyperactivity-impulsivity.",
+        "Several symptoms should have been present before adulthood and occur in multiple settings.",
+        "Symptoms interfere with academic, occupational, or social functioning.",
+        "The symptoms are developmentally inappropriate, not just a reaction to one context.",
+        "Anxiety, mood, sleep, substance, learning, and autism-related explanations should be evaluated."
+      ],
+      "differentials": [
+        {
+          "name": "Generalized Anxiety Disorder",
+          "distinguishingFeatures": "Anxiety-related concentration problems track with worry and tension."
+        },
+        {
+          "name": "Major Depressive Disorder",
+          "distinguishingFeatures": "Depression-related concentration problems are episodic and tied to mood and neurovegetative changes."
+        },
+        {
+          "name": "Autism Spectrum Disorder",
+          "distinguishingFeatures": "Autism includes social reciprocity differences and restricted behaviors beyond attention regulation."
+        }
+      ],
+      "howToDifferentiate": [
+        "Look for childhood onset using school reports or collateral history.",
+        "Ask whether symptoms appear across home, school, work, and relationships.",
+        "Screen for sleep deprivation, anxiety, depression, substances, and learning disorders."
+      ]
+    },
+    "anorexia": {
+      "diagnosisId": "anorexia",
+      "code": "F50.01",
+      "name": "Anorexia Nervosa",
+      "category": "Feeding and Eating Disorders",
+      "sourceNote": "Original educational DSM-5-TR-aligned summary. This is not verbatim DSM text, not clinically validated, and not medical advice.",
+      "criteriaGuide": [
+        "Restriction of intake leads to significantly low body weight in context.",
+        "There is intense fear of gaining weight or persistent behavior that interferes with weight gain.",
+        "Body image disturbance, undue influence of weight or shape, or lack of recognition of seriousness is present.",
+        "Specify restricting type or binge-eating/purging type when clinically appropriate.",
+        "Medical instability should be assessed urgently when low weight or purging is present."
+      ],
+      "differentials": [
+        {
+          "name": "Avoidant/Restrictive Food Intake Disorder",
+          "distinguishingFeatures": "ARFID restriction is not driven by weight or shape concerns."
+        },
+        {
+          "name": "Bulimia Nervosa",
+          "distinguishingFeatures": "Bulimia has recurrent binge-purge cycles without significantly low body weight as the defining feature."
+        },
+        {
+          "name": "Body Dysmorphic Disorder",
+          "distinguishingFeatures": "BDD is about perceived appearance defects rather than restriction to maintain low weight."
+        }
+      ],
+      "howToDifferentiate": [
+        "Measure medical risk and weight context rather than relying on appearance.",
+        "Ask directly about fear of weight gain and body image valuation.",
+        "Screen for bingeing, purging, exercise, laxatives, and medical instability."
+      ]
+    },
+    "bulimia": {
+      "diagnosisId": "bulimia",
+      "code": "F50.2",
+      "name": "Bulimia Nervosa",
+      "category": "Feeding and Eating Disorders",
+      "sourceNote": "Original educational DSM-5-TR-aligned summary. This is not verbatim DSM text, not clinically validated, and not medical advice.",
+      "criteriaGuide": [
+        "Recurrent binge eating involves unusually large intake with a sense of loss of control.",
+        "Recurrent compensatory behavior is used to prevent weight gain.",
+        "The pattern occurs repeatedly over time.",
+        "Self-evaluation is unduly influenced by weight and shape.",
+        "The disturbance is not exclusively during anorexia nervosa."
+      ],
+      "differentials": [
+        {
+          "name": "Binge-Eating Disorder",
+          "distinguishingFeatures": "Binge-eating disorder lacks recurrent purging, fasting, or excessive exercise as compensation."
+        },
+        {
+          "name": "Anorexia Nervosa",
+          "distinguishingFeatures": "Anorexia involves significantly low weight and restriction as a defining feature."
+        },
+        {
+          "name": "Purging Disorder",
+          "distinguishingFeatures": "Purging disorder involves purging without objectively large binge episodes."
+        }
+      ],
+      "howToDifferentiate": [
+        "Ask separately about binge size, loss of control, and compensatory behavior.",
+        "Assess weight context and medical risk.",
+        "Screen for electrolytes, dental complications, laxatives, and exercise patterns."
+      ]
+    },
+    "binge-eating": {
+      "diagnosisId": "binge-eating",
+      "code": "F50.81",
+      "name": "Binge-Eating Disorder",
+      "category": "Feeding and Eating Disorders",
+      "sourceNote": "Original educational DSM-5-TR-aligned summary. This is not verbatim DSM text, not clinically validated, and not medical advice.",
+      "criteriaGuide": [
+        "Recurrent binge episodes involve large intake with loss of control.",
+        "Episodes are associated with features such as rapid eating, uncomfortable fullness, eating when not hungry, eating alone, or guilt afterward.",
+        "Marked distress about binge eating is present.",
+        "Regular compensatory behaviors are absent.",
+        "The pattern is not exclusively during bulimia nervosa or anorexia nervosa."
+      ],
+      "differentials": [
+        {
+          "name": "Bulimia Nervosa",
+          "distinguishingFeatures": "Bulimia includes recurrent compensatory behaviors."
+        },
+        {
+          "name": "Anorexia Nervosa",
+          "distinguishingFeatures": "Anorexia centers on significantly low weight, restriction, and weight-gain fear."
+        },
+        {
+          "name": "Night Eating Syndrome",
+          "distinguishingFeatures": "Night eating is organized around evening or nocturnal eating rather than discrete loss-of-control binge episodes."
+        }
+      ],
+      "howToDifferentiate": [
+        "Assess objective binge size and loss of control.",
+        "Ask directly about vomiting, laxatives, fasting, and exercise compensation.",
+        "Evaluate shame, distress, frequency, and medical comorbidity."
+      ]
+    },
+    "arfid": {
+      "diagnosisId": "arfid",
+      "code": "F50.82",
+      "name": "Avoidant/Restrictive Food Intake Disorder",
+      "category": "Feeding and Eating Disorders",
+      "sourceNote": "Original educational DSM-5-TR-aligned summary. This is not verbatim DSM text, not clinically validated, and not medical advice.",
+      "criteriaGuide": [
+        "There is an eating or feeding disturbance such as sensory avoidance, low interest in food, or fear of aversive consequences.",
+        "The disturbance leads to weight loss, nutritional deficiency, supplement dependence, or psychosocial impairment.",
+        "The restriction is not due to lack of food or a culturally sanctioned practice.",
+        "There is no body image disturbance or fear of weight gain as the main driver.",
+        "Medical conditions and other mental disorders should be assessed as contributors."
+      ],
+      "differentials": [
+        {
+          "name": "Anorexia Nervosa",
+          "distinguishingFeatures": "Anorexia includes weight-gain fear or body image disturbance; ARFID does not."
+        },
+        {
+          "name": "Specific Phobia",
+          "distinguishingFeatures": "A choking or vomiting phobia may be narrower and not necessarily produce broad nutritional deficiency."
+        },
+        {
+          "name": "Autism Spectrum Disorder",
+          "distinguishingFeatures": "Autism may include food selectivity, but ARFID is diagnosed when feeding impairment exceeds what autism alone explains."
+        }
+      ],
+      "howToDifferentiate": [
+        "Ask what drives restriction: sensory discomfort, low appetite, fear of choking, or weight concerns.",
+        "Assess growth, labs, nutritional deficiencies, supplements, and social impairment.",
+        "Consider autism, GI disease, anxiety, and trauma without assuming they fully explain intake."
+      ]
+    },
+    "somatic-symptom": {
+      "diagnosisId": "somatic-symptom",
+      "code": "F45.1",
+      "name": "Somatic Symptom Disorder",
+      "category": "Somatic Symptom and Related Disorders",
+      "sourceNote": "Original educational DSM-5-TR-aligned summary. This is not verbatim DSM text, not clinically validated, and not medical advice.",
+      "criteriaGuide": [
+        "One or more somatic symptoms are distressing or disrupt daily life.",
+        "Excessive thoughts, anxiety, or behaviors about the symptoms are present.",
+        "The symptomatic state is persistent, even if individual symptoms shift.",
+        "Symptoms are not intentionally produced.",
+        "A medical condition can coexist; the diagnosis concerns disproportionate response and impairment."
+      ],
+      "differentials": [
+        {
+          "name": "Illness Anxiety Disorder",
+          "distinguishingFeatures": "Illness anxiety has high disease fear with absent or mild symptoms."
+        },
+        {
+          "name": "Panic Disorder",
+          "distinguishingFeatures": "Panic disorder has discrete abrupt surges rather than persistent somatic preoccupation."
+        },
+        {
+          "name": "Factitious Disorder",
+          "distinguishingFeatures": "Factitious disorder involves falsification or induction of symptoms."
+        }
+      ],
+      "howToDifferentiate": [
+        "Do not require symptoms to be medically unexplained; assess proportionality and impairment.",
+        "Separate fear of disease from distress about symptoms.",
+        "Look for reassurance cycles, checking, repeated visits, and life restriction."
+      ]
+    },
+    "illness-anxiety": {
+      "diagnosisId": "illness-anxiety",
+      "code": "F45.21",
+      "name": "Illness Anxiety Disorder",
+      "category": "Somatic Symptom and Related Disorders",
+      "sourceNote": "Original educational DSM-5-TR-aligned summary. This is not verbatim DSM text, not clinically validated, and not medical advice.",
+      "criteriaGuide": [
+        "The central feature is preoccupation with having or acquiring a serious illness.",
+        "Somatic symptoms are absent or mild.",
+        "Health anxiety is high and health-related behaviors or avoidance are present.",
+        "The preoccupation persists over time despite reassurance or evaluation.",
+        "Somatic symptom disorder, panic disorder, OCD, delusional disorder, and generalized anxiety should be considered."
+      ],
+      "differentials": [
+        {
+          "name": "Somatic Symptom Disorder",
+          "distinguishingFeatures": "Somatic symptom disorder has prominent distressing symptoms; illness anxiety has minimal symptoms."
+        },
+        {
+          "name": "Obsessive-Compulsive Disorder",
+          "distinguishingFeatures": "OCD may include health obsessions but has ritual patterns and broader obsessional themes."
+        },
+        {
+          "name": "Generalized Anxiety Disorder",
+          "distinguishingFeatures": "GAD worry spans many areas rather than serious illness preoccupation."
+        }
+      ],
+      "howToDifferentiate": [
+        "Ask whether distress is about sensations themselves or what disease they might signal.",
+        "Assess checking, reassurance-seeking, avoidance, and internet searching.",
+        "Watch for fixed delusional conviction or broader OCD rituals."
+      ]
+    },
+    "borderline-pd": {
+      "diagnosisId": "borderline-pd",
+      "code": "F60.3",
+      "name": "Borderline Personality Disorder",
+      "category": "Personality Disorders",
+      "sourceNote": "Original educational DSM-5-TR-aligned summary. This is not verbatim DSM text, not clinically validated, and not medical advice.",
+      "criteriaGuide": [
+        "The central pattern involves instability in relationships, self-image, and affect, with marked impulsivity.",
+        "Features can include abandonment fears, intense unstable relationships, identity disturbance, impulsivity, self-harm, affective instability, emptiness, anger, and stress-related paranoia or dissociation.",
+        "The pattern is pervasive and begins by early adulthood.",
+        "Symptoms are not better explained by episodic mood disorder, substances, or another condition.",
+        "Risk assessment is important when self-harm or suicidality is present."
+      ],
+      "differentials": [
+        {
+          "name": "Bipolar II Disorder",
+          "distinguishingFeatures": "Bipolar II has discrete hypomanic episodes lasting days with increased energy; BPD shifts are often interpersonal and rapid."
+        },
+        {
+          "name": "Posttraumatic Stress Disorder",
+          "distinguishingFeatures": "PTSD is organized around trauma exposure, intrusions, avoidance, and hyperarousal."
+        },
+        {
+          "name": "Histrionic Personality Disorder",
+          "distinguishingFeatures": "Histrionic traits emphasize attention-seeking and emotional expression without the same abandonment, identity, and self-harm pattern."
+        }
+      ],
+      "howToDifferentiate": [
+        "Map mood shifts to interpersonal triggers and duration.",
+        "Assess identity disturbance, abandonment fear, self-harm, and chronic emptiness.",
+        "Screen for trauma and bipolar episodes rather than assuming one explanation."
+      ]
+    },
+    "antisocial-pd": {
+      "diagnosisId": "antisocial-pd",
+      "code": "F60.2",
+      "name": "Antisocial Personality Disorder",
+      "category": "Personality Disorders",
+      "sourceNote": "Original educational DSM-5-TR-aligned summary. This is not verbatim DSM text, not clinically validated, and not medical advice.",
+      "criteriaGuide": [
+        "The adult pattern involves disregard for and violation of others' rights.",
+        "Features include unlawful behavior, deceitfulness, impulsivity, aggression, reckless disregard, irresponsibility, and lack of remorse.",
+        "Evidence of conduct disorder before age 15 is important.",
+        "The person must be an adult for the diagnosis.",
+        "The behavior should not occur exclusively during schizophrenia or bipolar disorder."
+      ],
+      "differentials": [
+        {
+          "name": "Substance Use Disorder",
+          "distinguishingFeatures": "Substances can cause antisocial acts, but ASPD is a broader developmental pattern."
+        },
+        {
+          "name": "Narcissistic Personality Disorder",
+          "distinguishingFeatures": "Narcissistic personality centers on grandiosity and admiration needs, without required conduct-disorder history."
+        },
+        {
+          "name": "Bipolar I Disorder",
+          "distinguishingFeatures": "Manic recklessness is episodic with mood and energy change."
+        }
+      ],
+      "howToDifferentiate": [
+        "Get collateral history of childhood conduct problems.",
+        "Separate intoxication-related behavior from a lifelong interpersonal pattern.",
+        "Assess remorse, responsibility, aggression, deceit, and legal history."
+      ]
+    },
+    "alcohol-use": {
+      "diagnosisId": "alcohol-use",
+      "code": "F10.20",
+      "name": "Alcohol Use Disorder",
+      "category": "Substance-Related and Addictive Disorders",
+      "sourceNote": "Original educational DSM-5-TR-aligned summary. This is not verbatim DSM text, not clinically validated, and not medical advice.",
+      "criteriaGuide": [
+        "The diagnosis is based on a problematic alcohol use pattern with clinically important impairment or distress.",
+        "Features include impaired control, craving, role failure, social problems, reduced activities, risky use, and continued use despite harm.",
+        "Tolerance and withdrawal can support severity but are not the only possible features.",
+        "Severity is commonly described by the number of criteria met.",
+        "Co-occurring mood, anxiety, trauma, and medical problems should be assessed."
+      ],
+      "differentials": [
+        {
+          "name": "Major Depressive Disorder",
+          "distinguishingFeatures": "Alcohol can cause or worsen depressive symptoms; determine whether mood symptoms persist during sobriety."
+        },
+        {
+          "name": "Generalized Anxiety Disorder",
+          "distinguishingFeatures": "Anxiety may drive drinking, but AUD is defined by impaired control and alcohol-related consequences."
+        },
+        {
+          "name": "Sedative Use Disorder",
+          "distinguishingFeatures": "Sedative-hypnotic use disorder involves benzodiazepines or related substances rather than alcohol."
+        }
+      ],
+      "howToDifferentiate": [
+        "Quantify use, unsuccessful cut-down attempts, craving, role failures, and hazardous use.",
+        "Ask about withdrawal symptoms and morning drinking.",
+        "Use collateral and labs when underreporting is likely."
+      ]
+    },
+    "opioid-use": {
+      "diagnosisId": "opioid-use",
+      "code": "F11.20",
+      "name": "Opioid Use Disorder",
+      "category": "Substance-Related and Addictive Disorders",
+      "sourceNote": "Original educational DSM-5-TR-aligned summary. This is not verbatim DSM text, not clinically validated, and not medical advice.",
+      "criteriaGuide": [
+        "The diagnosis is based on a problematic opioid use pattern with impairment or distress.",
+        "Features include impaired control, craving, role failure, social impairment, reduced activities, risky use, and continued use despite harm.",
+        "Tolerance and withdrawal count differently when opioids are taken only as prescribed under medical supervision.",
+        "Overdose risk, infectious risk, and sedative co-use should be assessed.",
+        "Severity is commonly based on the number of features present."
+      ],
+      "differentials": [
+        {
+          "name": "Chronic Pain Condition",
+          "distinguishingFeatures": "Pain can require opioids, but OUD involves impaired control, craving, and continued use despite harm."
+        },
+        {
+          "name": "Sedative Use Disorder",
+          "distinguishingFeatures": "Sedative use disorder involves benzodiazepines or related drugs and has different withdrawal risks."
+        },
+        {
+          "name": "Major Depressive Disorder",
+          "distinguishingFeatures": "Depression may coexist or follow opioid use, but it does not explain opioid craving and compulsive use."
+        }
+      ],
+      "howToDifferentiate": [
+        "Assess craving, unsuccessful cut-down attempts, risky use, and use despite harm.",
+        "Clarify prescribed versus non-prescribed use and whether instructions are followed.",
+        "Evaluate overdose history, naloxone access, infectious risks, and sedative co-use."
+      ]
+    },
+    "stimulant-use": {
+      "diagnosisId": "stimulant-use",
+      "code": "F15.20",
+      "name": "Stimulant Use Disorder",
+      "category": "Substance-Related and Addictive Disorders",
+      "sourceNote": "Original educational DSM-5-TR-aligned summary. This is not verbatim DSM text, not clinically validated, and not medical advice.",
+      "criteriaGuide": [
+        "The diagnosis is based on problematic amphetamine-type, cocaine, or other stimulant use causing impairment or distress.",
+        "Features include impaired control, craving, role failure, social problems, reduced activities, risky use, and continued use despite harm.",
+        "Tolerance and withdrawal-like crashes may support the pattern.",
+        "Stimulant intoxication can cause anxiety, insomnia, paranoia, and psychosis.",
+        "Prescribed stimulant treatment should be distinguished from misuse or compulsive use."
+      ],
+      "differentials": [
+        {
+          "name": "Bipolar I Disorder",
+          "distinguishingFeatures": "Mania persists as a mood episode independent of intoxication and withdrawal patterns."
+        },
+        {
+          "name": "Attention-Deficit/Hyperactivity Disorder",
+          "distinguishingFeatures": "ADHD is developmental and not defined by stimulant craving or consequences."
+        },
+        {
+          "name": "Schizophrenia",
+          "distinguishingFeatures": "Primary psychosis persists outside substance effects and includes a longitudinal syndrome."
+        }
+      ],
+      "howToDifferentiate": [
+        "Build a timeline linking sleep loss, paranoia, mood, and stimulant use.",
+        "Ask about binges, crashes, craving, and unsuccessful attempts to stop.",
+        "Separate prescribed therapeutic use from misuse and compulsive patterns."
+      ]
+    },
+    "insomnia": {
+      "diagnosisId": "insomnia",
+      "code": "G47.00",
+      "name": "Insomnia Disorder",
+      "category": "Sleep-Wake Disorders",
+      "sourceNote": "Original educational DSM-5-TR-aligned summary. This is not verbatim DSM text, not clinically validated, and not medical advice.",
+      "criteriaGuide": [
+        "Difficulty initiating sleep, maintaining sleep, or early-morning awakening is central.",
+        "The sleep problem occurs despite adequate opportunity to sleep.",
+        "Daytime distress or impairment is present.",
+        "The pattern is persistent and recurrent.",
+        "Other sleep-wake disorders, substances, medical conditions, and mental disorders should be assessed."
+      ],
+      "differentials": [
+        {
+          "name": "Circadian Rhythm Sleep-Wake Disorder",
+          "distinguishingFeatures": "Circadian disorders involve sleep timing mismatch; insomnia disorder is difficulty sleeping at the desired time despite opportunity."
+        },
+        {
+          "name": "Obstructive Sleep Apnea",
+          "distinguishingFeatures": "Sleep apnea involves breathing disturbance, snoring, witnessed apneas, or oxygen desaturation."
+        },
+        {
+          "name": "Major Depressive Disorder",
+          "distinguishingFeatures": "Depression includes broader mood and cognitive symptoms; insomnia may be one feature."
+        }
+      ],
+      "howToDifferentiate": [
+        "Ask about schedule, opportunity, naps, caffeine, substances, and sleep environment.",
+        "Screen for snoring, apnea, restless legs, circadian mismatch, and mood disorders.",
+        "Look for conditioned arousal and sleep effort around bedtime."
+      ]
+    }
+  }
+}

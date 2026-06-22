@@ -1,42 +1,66 @@
 # Psychiatry Diagnosis
 
-A static, GitHub Pages-ready DSM-5-TR diagnosis guessing game inspired by daily word games.
+An original DSM-5-TR educational diagnosis guessing game inspired by daily word games. Each case is fictional and progressively reveals clinical clues.
 
-Each day the site shows a fictional patient presentation. Players guess the most likely DSM-5-TR diagnostic label from progressively revealed clues. A wrong guess reveals another clue. The player has 6 clues and 6 guesses.
+## What Is New
 
-## Features
+- Classic Mode: six guesses, with a new clue after each miss.
+- Tough Mode: players click to reveal only the clues they want, then get one final diagnosis guess.
+- Backend case engine: the frontend requests cases, clue reveals, and guess validation from `server.mjs`.
+- More than 1000 generated fictional training cases stored in backend data.
+- Plus-only breakdowns: criteria guide, differential diagnoses, and how to distinguish them are returned only after a backend token check.
+- Static fallback data for GitHub Pages demos.
 
-- Daily case selection in the browser.
-- DSM-5-TR diagnostic label autocomplete.
-- Six progressive case clues.
-- Same-category feedback after wrong guesses.
-- Local stats, streaks, and guess distribution.
-- Shareable result text.
-- Original fictional cases and explanations.
-- Fully static: no backend required.
+## Run Locally
 
-## Local Preview
+Generate the case bank:
 
-The app is fully static and can be opened directly:
-
-```text
-index.html
+```bash
+npm run train:cases
 ```
 
-You can also serve the folder with any static file server if you prefer a local URL.
+Start the backend:
 
-## Deployment
+```bash
+npm start
+```
 
-The included GitHub Actions workflow deploys this static site to GitHub Pages on every push to `main`.
-
-Expected public URL after Pages is enabled:
+Open:
 
 ```text
-https://shubhaiims.github.io/psychiatrydiagnosis/
+http://127.0.0.1:4173/
+```
+
+To test Plus content locally, set a token before starting the server:
+
+```powershell
+$env:PLUS_ACCESS_TOKEN="test-plus"
+npm start
+```
+
+Then enter `test-plus` in the Plus token field after finishing a case.
+
+## Data Layout
+
+- `data/diagnoses.json`: public DSM-5-TR diagnostic label list.
+- `data/static-cases.json`: static demo fallback, including answers, for GitHub Pages.
+- `backend/private/cases.json`: backend case bank used by `server.mjs`.
+- `backend/private/premium-diagnoses.json`: Plus-only educational diagnosis guides.
+- `backend/generate-cases.mjs`: deterministic case generator. Increase `--count` to create more cases.
+
+The Node server blocks direct static access to `backend/private/*` and to `data/static-cases.json`. For production paid access, deploy the backend with `PLUS_ACCESS_TOKEN` set and keep private data in a private server, private repo, or database.
+
+## Scripts
+
+```bash
+npm run generate
+npm run train:cases
+npm run check
+npm start
 ```
 
 ## Clinical And Legal Notes
 
 This is for learning and play only. It is not a clinical tool, diagnostic instrument, medical advice, or a substitute for professional evaluation.
 
-DSM-5-TR is a trademarked publication of the American Psychiatric Association. This repository does not copy DSM-5-TR criteria text or proprietary manual content. It uses diagnostic labels, broad categories, and original fictional educational cases.
+DSM-5-TR is a trademarked publication of the American Psychiatric Association. This repository does not copy DSM-5-TR criteria text or proprietary manual content. It uses diagnostic labels, broad categories, fictional cases, and original non-verbatim educational summaries aligned with DSM-5-TR concepts.
