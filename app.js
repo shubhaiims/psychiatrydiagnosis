@@ -3,6 +3,11 @@ const TOUGH_GUESSES = 1;
 const MAX_CLUES = 6;
 const STORAGE_PREFIX = "psychiatrydiagnosis";
 const BASE_DATE = "2026-06-22";
+const MODE_CONFIG = {
+  easy: { label: "Easy", startingClues: 4, maxGuesses: MAX_GUESSES, offset: 191 },
+  classic: { label: "Classic", startingClues: 1, maxGuesses: MAX_GUESSES, offset: 0 },
+  tough: { label: "Tough", startingClues: 5, maxGuesses: TOUGH_GUESSES, offset: 397 }
+};
 
 const els = {
   caseMeta: document.getElementById("caseMeta"),
@@ -20,6 +25,7 @@ const els = {
   statsButton: document.getElementById("statsButton"),
   shareButton: document.getElementById("shareButton"),
   resetButton: document.getElementById("resetButton"),
+  easyMode: document.getElementById("easyMode"),
   classicMode: document.getElementById("classicMode"),
   toughMode: document.getElementById("toughMode"),
   toughActions: document.getElementById("toughActions"),
@@ -79,6 +85,7 @@ function bindEvents() {
   els.closeStats.addEventListener("click", () => els.statsModal.close());
   els.revealClueButton.addEventListener("click", revealNextClue);
   els.unlockPremium.addEventListener("click", unlockPremium);
+  els.easyMode.addEventListener("click", () => switchMode("easy"));
   els.classicMode.addEventListener("click", () => switchMode("classic"));
   els.toughMode.addEventListener("click", () => switchMode("tough"));
 }
@@ -100,7 +107,7 @@ async function loadFromBackend(mode) {
     fetchJson(`/api/cases/today?mode=${encodeURIComponent(mode)}&date=${encodeURIComponent(date)}`)
   ]);
   diagnoses = diagnosisPayload.diagnoses || [];
-  activeCase = normalizeCase(casePayload.case, false);
+  activeCase = normalizeCase(casePayload.case, false, mode);
 }
 
 async function loadFromStaticFiles(mode) {
@@ -116,16 +123,18 @@ async function loadFromStaticFiles(mode) {
   const casePayload = await caseResponse.json();
   diagnoses = diagnosisPayload.diagnoses || diagnosisPayload || [];
   const cases = casePayload.cases || casePayload || [];
-  activeCase = normalizeCase(selectCaseForDate(cases, mode), true);
+  activeCase = normalizeCase(selectCaseForDate(cases, mode), true, mode);
 }
 
-function normalizeCase(caseRecord, includeAnswer) {
+function normalizeCase(caseRecord, includeAnswer, mode) {
   if (!caseRecord) {
     throw new Error("No case returned.");
   }
 
   const allClues = Array.isArray(caseRecord.clues) ? caseRecord.clues.slice(0, MAX_CLUES) : [];
-  const firstClue = allClues[0] ? [allClues[0]] : [];
+  const visibleClues = includeAnswer
+    ? allClues.slice(0, startingCluesForMode(mode))
+    : allClues;
 
   return {
     id: caseRecord.id,
@@ -134,7 +143,7 @@ function normalizeCase(caseRecord, includeAnswer) {
     patient: caseRecord.patient || "Patient",
     difficulty: Number(caseRecord.difficulty || 3),
     totalClues: Number(caseRecord.totalClues || allClues.length || MAX_CLUES),
-    clues: firstClue,
+    clues: visibleClues.length ? visibleClues : allClues.slice(0, 1),
     allClues: includeAnswer ? allClues : null,
     answerId: includeAnswer ? caseRecord.answerId : null,
     explanation: includeAnswer ? caseRecord.explanation : "",
@@ -145,10 +154,12 @@ function normalizeCase(caseRecord, includeAnswer) {
 function selectCaseForDate(cases, mode) {
   const pool = mode === "tough"
     ? cases.filter((caseRecord) => Number(caseRecord.difficulty || 0) >= 3)
+    : mode === "easy"
+      ? cases.filter((caseRecord) => Number(caseRecord.difficulty || 0) <= 3)
     : cases;
   const usablePool = pool.length ? pool : cases;
   const days = daysSinceBase(getLocalDate());
-  const offset = mode === "tough" ? 397 : 0;
+  const offset = modeConfig(mode).offset;
   return usablePool[(days + offset) % usablePool.length];
 }
 
@@ -175,7 +186,7 @@ async function fetchJson(url, options = {}) {
 }
 
 async function switchMode(mode) {
-  if (mode === appMode || !["classic", "tough"].includes(mode)) return;
+  if (mode === appMode || !isKnownMode(mode)) return;
   appMode = mode;
   saveStoredMode(mode);
   setLoading(true);
@@ -185,7 +196,7 @@ async function switchMode(mode) {
     state = loadState();
     renderDiagnosisOptions();
     render();
-    showMessage(mode === "tough" ? "Tough Mode loaded. Reveal clues carefully." : "Classic Mode loaded.");
+    showMessage(`${modeLabel(mode)} Mode loaded.`);
   } catch (error) {
     showMessage(`Could not switch modes: ${error.message}`);
   } finally {
@@ -195,10 +206,27 @@ async function switchMode(mode) {
 
 function getStoredMode() {
   try {
-    return localStorage.getItem(`${STORAGE_PREFIX}:mode`) || "classic";
+    const storedMode = localStorage.getItem(`${STORAGE_PREFIX}:mode`);
+    return isKnownMode(storedMode) ? storedMode : "classic";
   } catch {
     return "classic";
   }
+}
+
+function isKnownMode(mode) {
+  return Boolean(MODE_CONFIG[mode]);
+}
+
+function modeConfig(mode) {
+  return MODE_CONFIG[mode] || MODE_CONFIG.classic;
+}
+
+function modeLabel(mode) {
+  return modeConfig(mode).label;
+}
+
+function startingCluesForMode(mode) {
+  return Math.min(MAX_CLUES, modeConfig(mode).startingClues);
 }
 
 function saveStoredMode(mode) {
@@ -252,11 +280,11 @@ function answerDiagnosisStatic() {
 }
 
 function maxGuessesForMode() {
-  return appMode === "tough" ? TOUGH_GUESSES : MAX_GUESSES;
+  return modeConfig(appMode).maxGuesses;
 }
 
 function createInitialState() {
-  const clues = activeCase?.clues?.length ? activeCase.clues.slice(0, 1) : [];
+  const clues = activeCase?.clues?.length ? activeCase.clues.slice(0, MAX_CLUES) : [];
   return {
     mode: appMode,
     caseId: activeCase?.id || null,
@@ -277,13 +305,14 @@ function loadState() {
   try {
     const parsed = JSON.parse(localStorage.getItem(storageKey()));
     if (parsed?.caseId === activeCase.id && parsed?.date === getLocalDate() && parsed?.mode === appMode) {
-      const clues = Array.isArray(parsed.clues) && parsed.clues.length
+      const storedClues = Array.isArray(parsed.clues) && parsed.clues.length
         ? parsed.clues.slice(0, MAX_CLUES)
         : base.clues;
+      const clues = storedClues.length >= base.clues.length ? storedClues : base.clues;
       return {
         ...base,
         ...parsed,
-        revealedClues: Math.max(1, Math.min(MAX_CLUES, Number(parsed.revealedClues || clues.length || 1))),
+        revealedClues: Math.max(clues.length, Math.min(MAX_CLUES, Number(parsed.revealedClues || clues.length || 1))),
         clues,
         guesses: Array.isArray(parsed.guesses) ? parsed.guesses : [],
         differentials: Array.isArray(parsed.differentials) ? parsed.differentials : []
@@ -517,13 +546,14 @@ function render() {
   if (!activeCase || !state) return;
 
   const sourceLabel = apiMode ? "backend protected" : "static demo";
-  const modeLabel = appMode === "tough" ? "Tough Mode" : "Classic Mode";
-  els.caseMeta.textContent = `${activeCase.title} / ${getLocalDate()} / ${activeCase.patient} / ${modeLabel} / ${sourceLabel}`;
+  const currentModeLabel = `${modeLabel(appMode)} Mode`;
+  els.caseMeta.textContent = `${activeCase.title} / ${getLocalDate()} / ${activeCase.patient} / ${currentModeLabel} / ${sourceLabel}`;
   els.clueCounter.textContent = `${state.clues.length} / ${activeCase.totalClues || MAX_CLUES}`;
   els.guessCounter.textContent = `${state.guesses.length} / ${maxGuessesForMode()}`;
   els.resultBadge.textContent = state.completed ? (state.won ? "Solved" : "Missed") : "In progress";
   els.resultBadge.style.color = state.completed ? (state.won ? "var(--green)" : "var(--red)") : "var(--ink)";
 
+  els.easyMode.classList.toggle("is-active", appMode === "easy");
   els.classicMode.classList.toggle("is-active", appMode === "classic");
   els.toughMode.classList.toggle("is-active", appMode === "tough");
   els.toughActions.hidden = appMode !== "tough" || state.completed;
@@ -742,8 +772,7 @@ function buildShareText() {
       ? `${state.guesses.length}/${maxGuessesForMode()}`
       : `X/${maxGuessesForMode()}`
     : `${state.guesses.length}/${maxGuessesForMode()}`;
-  const modeLabel = appMode === "tough" ? "Tough" : "Classic";
-  return `Psychiatry Diagnosis ${modeLabel} #${activeCase.caseNumber} ${line}\n${tiles || "_"}\n${location.origin}${location.pathname}`;
+  return `Psychiatry Diagnosis ${modeLabel(appMode)} #${activeCase.caseNumber} ${line}\n${tiles || "_"}\n${location.origin}${location.pathname}`;
 }
 
 async function shareResult() {

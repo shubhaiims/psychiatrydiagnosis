@@ -39,13 +39,17 @@
         </div>
 
         <section class="mode-toggle" aria-label="Game mode">
+          <button class="mode-button" id="easyMode" type="button" data-mode="easy">
+            <strong>Easy</strong>
+            <span>Starts with 4 clues and allows six guesses.</span>
+          </button>
           <button class="mode-button is-active" id="classicMode" type="button" data-mode="classic">
             <strong>Classic</strong>
-            <span>Six guesses. Wrong answers reveal clues.</span>
+            <span>Starts with 1 clue. Misses reveal more.</span>
           </button>
           <button class="mode-button" id="toughMode" type="button" data-mode="tough">
             <strong>Tough</strong>
-            <span>Click to reveal clues. One final answer.</span>
+            <span>Starts with 5 clues. One final answer.</span>
           </button>
         </section>
 
@@ -92,8 +96,9 @@
         <section class="panel">
           <h2>How To Play</h2>
           <ol class="compact-list">
+            <li>Easy mode starts with 4 clues and gives 6 guesses.</li>
             <li>Classic mode gives 6 guesses and reveals a new clue after each miss.</li>
-            <li>Tough mode lets you click for more clues, but your first diagnosis is final.</li>
+            <li>Tough mode starts with 5 clues, lets you reveal the final clue, and your first diagnosis is final.</li>
             <li>The frontend asks the backend for cases, clue reveals, and guess validation.</li>
             <li>Plus-only clinical breakdowns are loaded only after paid access is verified.</li>
           </ol>

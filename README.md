@@ -5,7 +5,8 @@ An original DSM-5-TR educational diagnosis guessing game inspired by daily word 
 ## What Is New
 
 - Classic Mode: six guesses, with a new clue after each miss.
-- Tough Mode: players click to reveal only the clues they want, then get one final diagnosis guess.
+- Easy Mode: starts with 4 clues and allows six guesses.
+- Tough Mode: starts with 5 clues, allows the final clue to be revealed, then gives one final diagnosis guess.
 - Backend case engine: the frontend requests cases, clue reveals, and guess validation from `server.mjs`.
 - More than 1000 generated fictional training cases stored in backend data.
 - Plus-only breakdowns: criteria guide, differential diagnoses, and how to distinguish them are returned only after a backend token check.

@@ -7,6 +7,11 @@ const MAX_GUESSES = 6;
 const TOUGH_GUESSES = 1;
 const MAX_CLUES = 6;
 const BASE_DATE = "2026-06-22";
+const MODE_CONFIG = {
+  easy: { startingClues: 4, maxGuesses: MAX_GUESSES, offset: 191 },
+  classic: { startingClues: 1, maxGuesses: MAX_GUESSES, offset: 0 },
+  tough: { startingClues: 5, maxGuesses: TOUGH_GUESSES, offset: 397 }
+};
 const PORT = Number(process.env.PORT || 4173);
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const ROOT_WITH_SEP = ROOT.endsWith(path.sep) ? ROOT : `${ROOT}${path.sep}`;
@@ -83,7 +88,7 @@ async function handleApi(req, res, url) {
     const mode = normalizeMode(url.searchParams.get("mode"));
     const date = url.searchParams.get("date") || localDate();
     const caseRecord = selectCaseForDate(data.cases, mode, date);
-    sendJson(res, 200, { case: publicCase(caseRecord, 1) });
+    sendJson(res, 200, { case: publicCase(caseRecord, startingCluesForMode(mode)) });
     return;
   }
 
@@ -116,7 +121,7 @@ async function handleApi(req, res, url) {
 
     const answer = data.diagnosisById.get(caseRecord.answerId);
     const mode = normalizeMode(body.mode);
-    const maxGuesses = mode === "tough" ? TOUGH_GUESSES : MAX_GUESSES;
+    const maxGuesses = modeConfig(mode).maxGuesses;
     const guessedIds = Array.isArray(body.guessedDiagnosisIds) ? body.guessedDiagnosisIds : [body.diagnosisId];
     const guessCount = clamp(guessedIds.length, 1, maxGuesses);
     const revealedClues = clamp(Number(body.revealedClues || 1), 1, MAX_CLUES);
@@ -235,9 +240,11 @@ function publicDiagnosis(diagnosis) {
 function selectCaseForDate(cases, mode, date) {
   const pool = mode === "tough"
     ? cases.filter((caseRecord) => Number(caseRecord.difficulty || 0) >= 3)
+    : mode === "easy"
+      ? cases.filter((caseRecord) => Number(caseRecord.difficulty || 0) <= 3)
     : cases;
   const usablePool = pool.length ? pool : cases;
-  const offset = mode === "tough" ? 397 : 0;
+  const offset = modeConfig(mode).offset;
   const index = (daysSinceBase(date) + offset) % usablePool.length;
   return usablePool[index];
 }
@@ -247,7 +254,15 @@ function findCase(caseId) {
 }
 
 function normalizeMode(mode) {
-  return mode === "tough" ? "tough" : "classic";
+  return MODE_CONFIG[mode] ? mode : "classic";
+}
+
+function modeConfig(mode) {
+  return MODE_CONFIG[mode] || MODE_CONFIG.classic;
+}
+
+function startingCluesForMode(mode) {
+  return Math.min(MAX_CLUES, modeConfig(mode).startingClues);
 }
 
 function localDate() {
