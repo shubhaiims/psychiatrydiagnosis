@@ -50,6 +50,11 @@ Then enter `test-plus` in the Plus token field after finishing a case.
 
 The Node server blocks direct static access to `backend/private/*` and to `data/static-cases.json`. For production paid access, deploy the backend with `PLUS_ACCESS_TOKEN` set and keep private data in a private server, private repo, or database.
 
+## Editing Guides
+
+- `FRONTEND.md`: where to edit UI, styling, modes, forms, modals, and Plus display.
+- `BACKEND.md`: where to edit API routes, generated cases, private data, and Plus token behavior.
+
 ## Scripts
 
 ```bash
