@@ -7,6 +7,7 @@ import { GAME_CONFIG } from "./backend/game-config.mjs";
 const MAX_CLUES = GAME_CONFIG.maxClues;
 const BASE_DATE = GAME_CONFIG.baseDate;
 const DEFAULT_MODE = GAME_CONFIG.defaultMode;
+const QUESTIONS_PER_ROUND = GAME_CONFIG.questionsPerRound || 5;
 const MODE_CONFIG = Object.fromEntries(GAME_CONFIG.modes.map((mode) => [mode.id, mode]));
 const PORT = Number(process.env.PORT || 4173);
 const HOST = process.env.HOST || "0.0.0.0";
@@ -90,8 +91,19 @@ async function handleApi(req, res, url) {
   if (method === "GET" && url.pathname === "/api/cases/today") {
     const mode = normalizeMode(url.searchParams.get("mode"));
     const date = url.searchParams.get("date") || localDate();
-    const caseRecord = selectCaseForDate(data.cases, mode, date);
-    sendJson(res, 200, { case: publicCase(caseRecord, startingCluesForMode(mode)) });
+    const roundCases = selectCasesForRound(data.cases, mode, date);
+    const questionIndex = clamp(Number(url.searchParams.get("question") || 0), 0, Math.max(0, roundCases.length - 1));
+    const cases = roundCases.map((caseRecord) => publicCase(caseRecord, startingCluesForMode(mode)));
+    sendJson(res, 200, {
+      round: {
+        date,
+        mode,
+        questionCount: cases.length,
+        currentQuestion: questionIndex + 1
+      },
+      cases,
+      case: cases[questionIndex]
+    });
     return;
   }
 
@@ -222,17 +234,48 @@ function publicDiagnosis(diagnosis) {
   };
 }
 
-function selectCaseForDate(cases, mode, date) {
-  const difficulty = modeConfig(mode).difficulty;
-  const pool = difficulty === "difficult"
-    ? cases.filter((caseRecord) => Number(caseRecord.difficulty || 0) >= 4)
-    : difficulty === "easy"
-      ? cases.filter((caseRecord) => Number(caseRecord.difficulty || 0) <= 3)
-    : cases;
+function selectCasesForRound(cases, mode, date) {
+  const pool = casePoolForMode(cases, mode);
   const usablePool = pool.length ? pool : cases;
   const offset = modeConfig(mode).offset;
-  const index = (daysSinceBase(date) + offset) % usablePool.length;
-  return usablePool[index];
+  const count = Math.min(QUESTIONS_PER_ROUND, usablePool.length);
+  const start = (daysSinceBase(date) * QUESTIONS_PER_ROUND + offset) % usablePool.length;
+  const step = coprimeStep(usablePool.length, modeConfig(mode).step || 37);
+  const selected = [];
+  const usedIds = new Set();
+
+  for (let cursor = 0; selected.length < count && cursor < usablePool.length * 2; cursor += 1) {
+    const caseRecord = usablePool[(start + cursor * step) % usablePool.length];
+    if (!usedIds.has(caseRecord.id)) {
+      selected.push(caseRecord);
+      usedIds.add(caseRecord.id);
+    }
+  }
+
+  for (const caseRecord of usablePool) {
+    if (selected.length >= count) break;
+    if (!usedIds.has(caseRecord.id)) {
+      selected.push(caseRecord);
+      usedIds.add(caseRecord.id);
+    }
+  }
+
+  return selected;
+}
+
+function selectCaseForDate(cases, mode, date, questionIndex = 0) {
+  const roundCases = selectCasesForRound(cases, mode, date);
+  return roundCases[clamp(Number(questionIndex), 0, Math.max(0, roundCases.length - 1))];
+}
+
+function casePoolForMode(cases, mode) {
+  const config = modeConfig(mode);
+  const min = Number(config.difficultyMin || 1);
+  const max = Number(config.difficultyMax || 5);
+  return cases.filter((caseRecord) => {
+    const difficulty = Number(caseRecord.difficulty || 0);
+    return difficulty >= min && difficulty <= max;
+  });
 }
 
 function findCase(caseId) {
@@ -255,6 +298,7 @@ function publicConfig() {
   return {
     appName: GAME_CONFIG.appName,
     maxClues: GAME_CONFIG.maxClues,
+    questionsPerRound: QUESTIONS_PER_ROUND,
     defaultMode: GAME_CONFIG.defaultMode,
     modes: GAME_CONFIG.modes.map((mode) => ({
       id: mode.id,
@@ -280,6 +324,25 @@ function daysSinceBase(dateString) {
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, Number.isFinite(value) ? value : min));
+}
+
+function coprimeStep(length, preferredStep) {
+  let step = clamp(Number(preferredStep || 37), 1, Math.max(1, length - 1));
+  while (length > 1 && gcd(step, length) !== 1) {
+    step = step >= length - 1 ? 1 : step + 1;
+  }
+  return step || 1;
+}
+
+function gcd(a, b) {
+  let x = Math.abs(a);
+  let y = Math.abs(b);
+  while (y) {
+    const next = x % y;
+    x = y;
+    y = next;
+  }
+  return x || 1;
 }
 
 async function readJsonBody(req) {

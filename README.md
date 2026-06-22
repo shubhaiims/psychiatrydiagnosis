@@ -5,9 +5,11 @@ An original DSM-5-TR educational diagnosis guessing game inspired by daily word 
 ## What Is New
 
 - Backend-only editing: app name, mode rules, cue counts, cases, answers, and Plus guides live in backend files.
-- Easy Mode: starts with one cue, backend selects easier cases, and allows up to six guesses.
-- Difficult Mode: starts with one cue, backend selects harder cases, and allows up to six guesses.
-- One cue at a time: a wrong guess reveals exactly one additional cue until the six-cue limit.
+- Easy Mode: a 5-question round with easier backend-selected cases.
+- Difficult Mode: a 5-question round from the hardest generated backend case bucket.
+- Each question starts with one cue and allows up to six guesses.
+- One cue at a time: a wrong guess reveals exactly one additional cue until the six-cue limit for that question.
+- After a question is solved or missed, the player can advance to the next question in the round.
 - Backend case engine: the frontend requests cases and guess validation from `server.mjs`.
 - More than 1000 generated fictional training cases stored in backend data.
 - Plus-only breakdowns: criteria guide, differential diagnoses, and how to distinguish them are returned only after a backend token check.

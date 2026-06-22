@@ -4,6 +4,7 @@ const FALLBACK_APP_NAME = "DIAGNOSIS DASH";
 const els = {
   appName: document.getElementById("appName"),
   caseMeta: document.getElementById("caseMeta"),
+  questionCounter: document.getElementById("questionCounter"),
   clueCounter: document.getElementById("clueCounter"),
   guessCounter: document.getElementById("guessCounter"),
   resultBadge: document.getElementById("resultBadge"),
@@ -18,11 +19,13 @@ const els = {
   statsButton: document.getElementById("statsButton"),
   shareButton: document.getElementById("shareButton"),
   resetButton: document.getElementById("resetButton"),
+  nextCaseButton: document.getElementById("nextCaseButton"),
   modeToggle: document.getElementById("modeToggle"),
   howToPlayList: document.getElementById("howToPlayList"),
   resultModal: document.getElementById("resultModal"),
   closeResult: document.getElementById("closeResult"),
   modalClose: document.getElementById("modalClose"),
+  modalNextCase: document.getElementById("modalNextCase"),
   modalShare: document.getElementById("modalShare"),
   resultEyebrow: document.getElementById("resultEyebrow"),
   resultTitle: document.getElementById("resultTitle"),
@@ -42,7 +45,9 @@ const els = {
 
 let appConfig = null;
 let diagnoses = [];
+let roundCases = [];
 let activeCase = null;
+let currentQuestionIndex = 0;
 let appMode = "easy";
 let apiMode = false;
 let state = null;
@@ -75,9 +80,11 @@ function bindEvents() {
   els.statsButton.addEventListener("click", openStatsModal);
   els.shareButton.addEventListener("click", shareResult);
   els.resetButton.addEventListener("click", resetCase);
+  els.nextCaseButton.addEventListener("click", goToNextCase);
   els.modalShare.addEventListener("click", shareResult);
   els.closeResult.addEventListener("click", () => els.resultModal.close());
   els.modalClose.addEventListener("click", () => els.resultModal.close());
+  els.modalNextCase.addEventListener("click", goToNextCase);
   els.closeStats.addEventListener("click", () => els.statsModal.close());
   els.unlockPremium.addEventListener("click", unlockPremium);
   els.modeToggle.addEventListener("click", (event) => {
@@ -104,7 +111,19 @@ async function loadFromBackend(mode) {
     fetchJson(`/api/cases/today?mode=${encodeURIComponent(mode)}&date=${encodeURIComponent(date)}`)
   ]);
   diagnoses = diagnosisPayload.diagnoses || [];
-  activeCase = normalizeCase(casePayload.case);
+  roundCases = normalizeRound(casePayload);
+  currentQuestionIndex = getStoredQuestionIndex(mode, roundCases.length);
+  activeCase = roundCases[currentQuestionIndex] || roundCases[0];
+}
+
+function normalizeRound(payload) {
+  const cases = Array.isArray(payload?.cases) && payload.cases.length
+    ? payload.cases
+    : [payload?.case].filter(Boolean);
+  if (!cases.length) {
+    throw new Error("No round cases returned.");
+  }
+  return cases.slice(0, questionsPerRound()).map(normalizeCase);
 }
 
 function normalizeCase(caseRecord) {
@@ -184,6 +203,7 @@ function normalizeConfig(config) {
   return {
     appName: config?.appName || FALLBACK_APP_NAME,
     maxClues: Number(config?.maxClues || 6),
+    questionsPerRound: Number(config?.questionsPerRound || 5),
     defaultMode: config?.defaultMode || modes[0].id,
     modes: modes.map((mode) => ({
       id: String(mode.id),
@@ -209,6 +229,14 @@ function appName() {
 
 function maxClues() {
   return Math.max(1, Number(appConfig?.maxClues || 6));
+}
+
+function questionsPerRound() {
+  return Math.max(1, Number(appConfig?.questionsPerRound || 5));
+}
+
+function roundSize() {
+  return Math.max(1, roundCases.length || questionsPerRound());
 }
 
 function defaultMode() {
@@ -263,8 +291,33 @@ function getLocalDate() {
   return `${year}-${month}-${day}`;
 }
 
+function roundProgressKey(mode = appMode) {
+  return `${STORAGE_PREFIX}:round:${getLocalDate()}:${mode}`;
+}
+
+function getStoredQuestionIndex(mode, size) {
+  try {
+    const stored = Number(localStorage.getItem(roundProgressKey(mode)) || 0);
+    return clampIndex(stored, 0, Math.max(0, size - 1));
+  } catch {
+    return 0;
+  }
+}
+
+function saveStoredQuestionIndex(index = currentQuestionIndex) {
+  try {
+    localStorage.setItem(roundProgressKey(), String(clampIndex(index, 0, roundSize() - 1)));
+  } catch {
+    // Ignore private browsing storage failures.
+  }
+}
+
+function storageKeyForCase(caseRecord = activeCase) {
+  return `${STORAGE_PREFIX}:case:${getLocalDate()}:${appMode}:${caseRecord?.id || "pending"}`;
+}
+
 function storageKey() {
-  return `${STORAGE_PREFIX}:case:${getLocalDate()}:${appMode}:${activeCase?.id || "pending"}`;
+  return storageKeyForCase(activeCase);
 }
 
 function statsKey() {
@@ -296,12 +349,18 @@ function maxGuessesForMode() {
   return modeConfig(appMode)?.maxGuesses || 6;
 }
 
+function hasNextQuestion() {
+  return currentQuestionIndex < roundSize() - 1;
+}
+
 function createInitialState() {
   const clues = activeCase?.clues?.length ? activeCase.clues.slice(0, maxClues()) : [];
   return {
     mode: appMode,
     caseId: activeCase?.id || null,
     date: getLocalDate(),
+    questionIndex: currentQuestionIndex,
+    roundSize: roundSize(),
     revealedClues: Math.max(1, clues.length),
     clues,
     guesses: [],
@@ -323,6 +382,8 @@ function loadState() {
       return {
         ...base,
         ...parsed,
+        questionIndex: currentQuestionIndex,
+        roundSize: roundSize(),
         revealedClues: Math.max(clues.length, Math.min(maxClues(), Number(parsed.revealedClues || clues.length || 1))),
         clues,
         guesses: Array.isArray(parsed.guesses) ? parsed.guesses : []
@@ -332,6 +393,19 @@ function loadState() {
     // Ignore corrupt local state.
   }
   return base;
+}
+
+function goToNextCase() {
+  if (!state?.completed || !hasNextQuestion()) return;
+  currentQuestionIndex += 1;
+  saveStoredQuestionIndex();
+  activeCase = roundCases[currentQuestionIndex];
+  state = loadState();
+  if (els.resultModal.open) {
+    els.resultModal.close();
+  }
+  showMessage(`Question ${currentQuestionIndex + 1} of ${roundSize()} loaded.`);
+  render();
 }
 
 function saveState() {
@@ -442,7 +516,9 @@ async function submitGuess(event) {
         state.revealedClues = state.clues.length;
       }
       recordStats();
-      showMessage(state.won ? "Correct. Plus unlocks the clinical breakdown." : "Case complete. Plus unlocks the clinical breakdown.");
+      showMessage(hasNextQuestion()
+        ? "Question complete. Plus unlocks the clinical breakdown, or continue to the next question."
+        : "Round complete. Plus unlocks the clinical breakdown.");
       openResultModal();
     } else {
       showMessage(result.near ? "Same diagnostic family. Getting warmer." : "Not the best fit yet. New cue revealed.");
@@ -496,10 +572,16 @@ function render() {
 
   const sourceLabel = apiMode ? "backend protected" : "backend required";
   const currentModeLabel = `${modeLabel(appMode)} Mode`;
-  els.caseMeta.textContent = `${activeCase.title} / ${getLocalDate()} / ${activeCase.patient} / ${currentModeLabel} / ${sourceLabel}`;
+  const questionLabel = `Question ${currentQuestionIndex + 1} of ${roundSize()}`;
+  els.caseMeta.textContent = `${questionLabel} / ${activeCase.title} / ${getLocalDate()} / ${activeCase.patient} / ${currentModeLabel} / ${sourceLabel}`;
+  els.questionCounter.textContent = `${currentQuestionIndex + 1} / ${roundSize()}`;
   els.clueCounter.textContent = `${state.clues.length} / ${activeCase.totalClues || maxClues()}`;
   els.guessCounter.textContent = `${state.guesses.length} / ${maxGuessesForMode()}`;
-  els.resultBadge.textContent = state.completed ? (state.won ? "Solved" : "Missed") : "In progress";
+  els.resultBadge.textContent = state.completed
+    ? hasNextQuestion()
+      ? (state.won ? "Solved" : "Missed")
+      : "Round done"
+    : "In progress";
   els.resultBadge.style.color = state.completed ? (state.won ? "var(--green)" : "var(--red)") : "var(--ink)";
 
   els.modeToggle.querySelectorAll("[data-mode]").forEach((button) => {
@@ -523,6 +605,8 @@ function render() {
 
   els.guessInput.disabled = state.completed;
   els.guessForm.querySelector("button").disabled = state.completed;
+  els.nextCaseButton.hidden = !state.completed || !hasNextQuestion();
+  els.nextCaseButton.textContent = `Next Question (${currentQuestionIndex + 2}/${roundSize()})`;
   renderLibrary();
 }
 
@@ -571,12 +655,15 @@ function renderLibrary() {
 
 function openResultModal() {
   const answer = state.answer;
+  const nextAvailable = hasNextQuestion();
   resetPremiumPanel();
 
-  els.resultEyebrow.textContent = state.won ? "Solved" : "Answer";
+  els.resultEyebrow.textContent = `Question ${currentQuestionIndex + 1} of ${roundSize()} ${state.won ? "solved" : "answer"}`;
   els.resultTitle.textContent = state.won
     ? `Solved in ${state.guesses.length} guess${state.guesses.length === 1 ? "" : "es"}`
-    : "Better luck next case";
+    : nextAvailable
+      ? "Answer shown. Next question is ready."
+      : "Round complete";
   els.answerLine.textContent = answer
     ? `${answer.name} (${answer.category})`
     : "Answer unavailable.";
@@ -586,6 +673,9 @@ function openResultModal() {
       <p>Detailed DSM-5-TR-aligned criteria guidance, differential diagnoses, and how to distinguish them are available only in the paid version.</p>
     </div>
   `;
+  els.modalNextCase.hidden = !nextAvailable;
+  els.modalNextCase.textContent = `Next Question (${currentQuestionIndex + 2}/${roundSize()})`;
+  els.modalClose.textContent = nextAvailable ? "Close" : "Finish";
   els.resultModal.showModal();
 }
 
@@ -707,7 +797,7 @@ function buildShareText() {
       ? `${state.guesses.length}/${maxGuessesForMode()}`
       : `X/${maxGuessesForMode()}`
     : `${state.guesses.length}/${maxGuessesForMode()}`;
-  return `${appName()} ${modeLabel(appMode)} #${activeCase.caseNumber} ${line}\n${tiles || "_"}\n${location.origin}${location.pathname}`;
+  return `${appName()} ${modeLabel(appMode)} Q${currentQuestionIndex + 1}/${roundSize()} #${activeCase.caseNumber} ${line}\n${tiles || "_"}\n${location.origin}${location.pathname}`;
 }
 
 async function shareResult() {
@@ -725,8 +815,13 @@ async function shareResult() {
 }
 
 function resetCase() {
-  if (!activeCase || !confirm("Reset today's saved game on this device?")) return;
-  localStorage.removeItem(storageKey());
+  if (!activeCase || !confirm("Reset today's saved 5-question round on this device?")) return;
+  for (const caseRecord of roundCases) {
+    localStorage.removeItem(storageKeyForCase(caseRecord));
+  }
+  localStorage.removeItem(roundProgressKey());
+  currentQuestionIndex = 0;
+  activeCase = roundCases[0];
   state = createInitialState();
   showMessage("");
   render();
@@ -756,4 +851,9 @@ function escapeHtml(value) {
 
 function escapeAttr(value) {
   return escapeHtml(value);
+}
+
+function clampIndex(value, min, max) {
+  const numeric = Number.isFinite(Number(value)) ? Math.trunc(Number(value)) : min;
+  return Math.max(min, Math.min(max, numeric));
 }

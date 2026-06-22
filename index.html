@@ -42,6 +42,10 @@
 
         <section class="mode-strip" aria-label="Game status">
           <div>
+            <span class="mode-label">Question</span>
+            <strong id="questionCounter">1 / 5</strong>
+          </div>
+          <div>
             <span class="mode-label">Cues</span>
             <strong id="clueCounter">1 / 6</strong>
           </div>
@@ -69,6 +73,9 @@
           <datalist id="diagnosisOptions"></datalist>
           <button class="primary-button" type="submit">Submit</button>
         </form>
+        <div class="round-actions">
+          <button class="primary-button" id="nextCaseButton" type="button" hidden>Next Question</button>
+        </div>
 
         <p class="form-message" id="formMessage" role="status"></p>
         <section class="guess-list" id="guessList" aria-label="Previous guesses"></section>
@@ -127,6 +134,7 @@
         </section>
 
         <div class="modal-actions">
+          <button class="primary-button" id="modalNextCase" type="button" hidden>Next Question</button>
           <button class="primary-button" id="modalShare" type="button">Share</button>
           <button class="text-button" id="modalClose" type="button">Close</button>
         </div>
