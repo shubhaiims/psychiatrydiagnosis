@@ -1,5 +1,5 @@
 {
-  "name": "psychiatrydiagnosis",
+  "name": "diagnosis-dash",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -7,6 +7,6 @@
     "start": "node server.mjs",
     "generate": "node backend/generate-cases.mjs",
     "train:cases": "node backend/generate-cases.mjs --count 1200",
-    "check": "node --check app.js && node --check server.mjs && node --check backend/generate-cases.mjs"
+    "check": "node --check app.js && node --check server.mjs && node --check backend/generate-cases.mjs && node --check backend/game-config.mjs"
   }
 }

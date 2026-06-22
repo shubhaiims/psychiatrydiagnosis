@@ -2,17 +2,14 @@ import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { GAME_CONFIG } from "./backend/game-config.mjs";
 
-const MAX_GUESSES = 6;
-const TOUGH_GUESSES = 1;
-const MAX_CLUES = 6;
-const BASE_DATE = "2026-06-22";
-const MODE_CONFIG = {
-  easy: { startingClues: 4, maxGuesses: MAX_GUESSES, offset: 191 },
-  classic: { startingClues: 1, maxGuesses: MAX_GUESSES, offset: 0 },
-  tough: { startingClues: 5, maxGuesses: TOUGH_GUESSES, offset: 397 }
-};
+const MAX_CLUES = GAME_CONFIG.maxClues;
+const BASE_DATE = GAME_CONFIG.baseDate;
+const DEFAULT_MODE = GAME_CONFIG.defaultMode;
+const MODE_CONFIG = Object.fromEntries(GAME_CONFIG.modes.map((mode) => [mode.id, mode]));
 const PORT = Number(process.env.PORT || 4173);
+const HOST = process.env.HOST || "0.0.0.0";
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const ROOT_WITH_SEP = ROOT.endsWith(path.sep) ? ROOT : `${ROOT}${path.sep}`;
 
@@ -31,8 +28,9 @@ const contentTypes = new Map([
 
 const data = await loadData();
 
-createServer(handleRequest).listen(PORT, "127.0.0.1", () => {
-  console.log(`Psychiatry Diagnosis running at http://127.0.0.1:${PORT}/`);
+createServer(handleRequest).listen(PORT, HOST, () => {
+  const displayHost = HOST === "0.0.0.0" ? "127.0.0.1" : HOST;
+  console.log(`${GAME_CONFIG.appName} running at http://${displayHost}:${PORT}/`);
   console.log(`Loaded ${data.cases.length} backend cases and ${data.diagnoses.length} DSM-5-TR labels.`);
 });
 
@@ -75,7 +73,12 @@ async function handleApi(req, res, url) {
   const method = req.method || "GET";
 
   if (method === "GET" && url.pathname === "/api/health") {
-    sendJson(res, 200, { ok: true, cases: data.cases.length, diagnoses: data.diagnoses.length });
+    sendJson(res, 200, { ok: true, appName: GAME_CONFIG.appName, cases: data.cases.length, diagnoses: data.diagnoses.length });
+    return;
+  }
+
+  if (method === "GET" && url.pathname === "/api/config") {
+    sendJson(res, 200, { config: publicConfig() });
     return;
   }
 
@@ -127,7 +130,7 @@ async function handleApi(req, res, url) {
     const revealedClues = clamp(Number(body.revealedClues || 1), 1, MAX_CLUES);
     const correct = guessedDiagnosis.id === answer.id;
     const near = !correct && guessedDiagnosis.category === answer.category;
-    const completed = correct || mode === "tough" || guessCount >= maxGuesses;
+    const completed = correct || modeConfig(mode).finalGuessOnly || guessCount >= maxGuesses;
 
     const payload = {
       correct,
@@ -238,9 +241,10 @@ function publicDiagnosis(diagnosis) {
 }
 
 function selectCaseForDate(cases, mode, date) {
-  const pool = mode === "tough"
+  const difficulty = modeConfig(mode).difficulty;
+  const pool = difficulty === "tough"
     ? cases.filter((caseRecord) => Number(caseRecord.difficulty || 0) >= 3)
-    : mode === "easy"
+    : difficulty === "easy"
       ? cases.filter((caseRecord) => Number(caseRecord.difficulty || 0) <= 3)
     : cases;
   const usablePool = pool.length ? pool : cases;
@@ -254,15 +258,33 @@ function findCase(caseId) {
 }
 
 function normalizeMode(mode) {
-  return MODE_CONFIG[mode] ? mode : "classic";
+  return MODE_CONFIG[mode] ? mode : DEFAULT_MODE;
 }
 
 function modeConfig(mode) {
-  return MODE_CONFIG[mode] || MODE_CONFIG.classic;
+  return MODE_CONFIG[mode] || MODE_CONFIG[DEFAULT_MODE] || GAME_CONFIG.modes[0];
 }
 
 function startingCluesForMode(mode) {
   return Math.min(MAX_CLUES, modeConfig(mode).startingClues);
+}
+
+function publicConfig() {
+  return {
+    appName: GAME_CONFIG.appName,
+    maxClues: GAME_CONFIG.maxClues,
+    defaultMode: GAME_CONFIG.defaultMode,
+    modes: GAME_CONFIG.modes.map((mode) => ({
+      id: mode.id,
+      label: mode.label,
+      description: mode.description,
+      startingClues: mode.startingClues,
+      maxGuesses: mode.maxGuesses,
+      canReveal: mode.canReveal,
+      finalGuessOnly: mode.finalGuessOnly
+    })),
+    howToPlay: GAME_CONFIG.howToPlay
+  };
 }
 
 function localDate() {

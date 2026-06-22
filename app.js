@@ -1,15 +1,8 @@
-const MAX_GUESSES = 6;
-const TOUGH_GUESSES = 1;
-const MAX_CLUES = 6;
-const STORAGE_PREFIX = "psychiatrydiagnosis";
-const BASE_DATE = "2026-06-22";
-const MODE_CONFIG = {
-  easy: { label: "Easy", startingClues: 4, maxGuesses: MAX_GUESSES, offset: 191 },
-  classic: { label: "Classic", startingClues: 1, maxGuesses: MAX_GUESSES, offset: 0 },
-  tough: { label: "Tough", startingClues: 5, maxGuesses: TOUGH_GUESSES, offset: 397 }
-};
+const STORAGE_PREFIX = "diagnosisdash";
+const FALLBACK_APP_NAME = "DIAGNOSIS DASH";
 
 const els = {
+  appName: document.getElementById("appName"),
   caseMeta: document.getElementById("caseMeta"),
   clueCounter: document.getElementById("clueCounter"),
   guessCounter: document.getElementById("guessCounter"),
@@ -25,9 +18,8 @@ const els = {
   statsButton: document.getElementById("statsButton"),
   shareButton: document.getElementById("shareButton"),
   resetButton: document.getElementById("resetButton"),
-  easyMode: document.getElementById("easyMode"),
-  classicMode: document.getElementById("classicMode"),
-  toughMode: document.getElementById("toughMode"),
+  modeToggle: document.getElementById("modeToggle"),
+  howToPlayList: document.getElementById("howToPlayList"),
   toughActions: document.getElementById("toughActions"),
   revealClueButton: document.getElementById("revealClueButton"),
   resultModal: document.getElementById("resultModal"),
@@ -45,13 +37,15 @@ const els = {
   premiumContent: document.getElementById("premiumContent"),
   statsModal: document.getElementById("statsModal"),
   closeStats: document.getElementById("closeStats"),
+  statsTitle: document.getElementById("statsTitle"),
   statsGrid: document.getElementById("statsGrid"),
   distribution: document.getElementById("distribution")
 };
 
+let appConfig = null;
 let diagnoses = [];
 let activeCase = null;
-let appMode = getStoredMode();
+let appMode = "classic";
 let apiMode = false;
 let state = null;
 
@@ -61,11 +55,15 @@ init();
 async function init() {
   setLoading(true);
   try {
+    await loadConfig();
+    appMode = getStoredMode();
     await loadCaseForMode(appMode);
     state = loadState();
     renderDiagnosisOptions();
+    renderModeButtons();
+    renderHowToPlay();
     render();
-    showMessage(apiMode ? "Backend case engine connected." : "Static demo mode. Run the backend for protected answers and Plus.");
+    showMessage("Backend case engine connected.");
   } catch (error) {
     showFatalLoadError(error);
   } finally {
@@ -85,19 +83,21 @@ function bindEvents() {
   els.closeStats.addEventListener("click", () => els.statsModal.close());
   els.revealClueButton.addEventListener("click", revealNextClue);
   els.unlockPremium.addEventListener("click", unlockPremium);
-  els.easyMode.addEventListener("click", () => switchMode("easy"));
-  els.classicMode.addEventListener("click", () => switchMode("classic"));
-  els.toughMode.addEventListener("click", () => switchMode("tough"));
+  els.modeToggle.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-mode]");
+    if (button) switchMode(button.dataset.mode);
+  });
 }
 
 async function loadCaseForMode(mode) {
-  try {
-    await loadFromBackend(mode);
-    apiMode = true;
-  } catch {
-    await loadFromStaticFiles(mode);
-    apiMode = false;
-  }
+  await loadFromBackend(mode);
+  apiMode = true;
+}
+
+async function loadConfig() {
+  const payload = await fetchJson("/api/config");
+  appConfig = normalizeConfig(payload.config);
+  applyBranding();
 }
 
 async function loadFromBackend(mode) {
@@ -107,34 +107,15 @@ async function loadFromBackend(mode) {
     fetchJson(`/api/cases/today?mode=${encodeURIComponent(mode)}&date=${encodeURIComponent(date)}`)
   ]);
   diagnoses = diagnosisPayload.diagnoses || [];
-  activeCase = normalizeCase(casePayload.case, false, mode);
+  activeCase = normalizeCase(casePayload.case);
 }
 
-async function loadFromStaticFiles(mode) {
-  const [diagnosisResponse, caseResponse] = await Promise.all([
-    fetch("data/diagnoses.json", { cache: "no-store" }),
-    fetch("data/static-cases.json", { cache: "no-store" })
-  ]);
-  if (!diagnosisResponse.ok || !caseResponse.ok) {
-    throw new Error("Case data is not available.");
-  }
-
-  const diagnosisPayload = await diagnosisResponse.json();
-  const casePayload = await caseResponse.json();
-  diagnoses = diagnosisPayload.diagnoses || diagnosisPayload || [];
-  const cases = casePayload.cases || casePayload || [];
-  activeCase = normalizeCase(selectCaseForDate(cases, mode), true, mode);
-}
-
-function normalizeCase(caseRecord, includeAnswer, mode) {
+function normalizeCase(caseRecord) {
   if (!caseRecord) {
     throw new Error("No case returned.");
   }
 
-  const allClues = Array.isArray(caseRecord.clues) ? caseRecord.clues.slice(0, MAX_CLUES) : [];
-  const visibleClues = includeAnswer
-    ? allClues.slice(0, startingCluesForMode(mode))
-    : allClues;
+  const allClues = Array.isArray(caseRecord.clues) ? caseRecord.clues.slice(0, maxClues()) : [];
 
   return {
     id: caseRecord.id,
@@ -142,31 +123,12 @@ function normalizeCase(caseRecord, includeAnswer, mode) {
     title: caseRecord.title || `Case ${caseRecord.id}`,
     patient: caseRecord.patient || "Patient",
     difficulty: Number(caseRecord.difficulty || 3),
-    totalClues: Number(caseRecord.totalClues || allClues.length || MAX_CLUES),
-    clues: visibleClues.length ? visibleClues : allClues.slice(0, 1),
-    allClues: includeAnswer ? allClues : null,
-    answerId: includeAnswer ? caseRecord.answerId : null,
-    explanation: includeAnswer ? caseRecord.explanation : "",
-    differentials: includeAnswer ? caseRecord.differentials || [] : []
+    totalClues: Number(caseRecord.totalClues || allClues.length || maxClues()),
+    clues: allClues.length ? allClues : [],
+    answerId: null,
+    explanation: "",
+    differentials: []
   };
-}
-
-function selectCaseForDate(cases, mode) {
-  const pool = mode === "tough"
-    ? cases.filter((caseRecord) => Number(caseRecord.difficulty || 0) >= 3)
-    : mode === "easy"
-      ? cases.filter((caseRecord) => Number(caseRecord.difficulty || 0) <= 3)
-    : cases;
-  const usablePool = pool.length ? pool : cases;
-  const days = daysSinceBase(getLocalDate());
-  const offset = modeConfig(mode).offset;
-  return usablePool[(days + offset) % usablePool.length];
-}
-
-function daysSinceBase(dateString) {
-  const start = new Date(`${BASE_DATE}T00:00:00`);
-  const current = new Date(`${dateString}T00:00:00`);
-  return Math.max(0, Math.floor((current - start) / 86400000));
 }
 
 async function fetchJson(url, options = {}) {
@@ -207,26 +169,91 @@ async function switchMode(mode) {
 function getStoredMode() {
   try {
     const storedMode = localStorage.getItem(`${STORAGE_PREFIX}:mode`);
-    return isKnownMode(storedMode) ? storedMode : "classic";
+    return isKnownMode(storedMode) ? storedMode : defaultMode();
   } catch {
-    return "classic";
+    return defaultMode();
   }
 }
 
+function normalizeConfig(config) {
+  const modes = Array.isArray(config?.modes) && config.modes.length
+    ? config.modes
+    : [{
+        id: "classic",
+        label: "Classic",
+        description: "Backend mode configuration unavailable.",
+        startingClues: 1,
+        maxGuesses: 6,
+        canReveal: false,
+        finalGuessOnly: false
+      }];
+
+  return {
+    appName: config?.appName || FALLBACK_APP_NAME,
+    maxClues: Number(config?.maxClues || 6),
+    defaultMode: config?.defaultMode || modes[0].id,
+    modes: modes.map((mode) => ({
+      id: String(mode.id),
+      label: mode.label || mode.id,
+      description: mode.description || "",
+      startingClues: Number(mode.startingClues || 1),
+      maxGuesses: Number(mode.maxGuesses || 6),
+      canReveal: Boolean(mode.canReveal),
+      finalGuessOnly: Boolean(mode.finalGuessOnly)
+    })),
+    howToPlay: Array.isArray(config?.howToPlay) ? config.howToPlay : []
+  };
+}
+
+function applyBranding() {
+  const name = appName();
+  document.title = `${name} | DSM-5-TR Guessing Game`;
+  if (els.appName) els.appName.textContent = name;
+  if (els.statsTitle) els.statsTitle.textContent = name;
+}
+
+function appName() {
+  return appConfig?.appName || FALLBACK_APP_NAME;
+}
+
+function maxClues() {
+  return Math.max(1, Number(appConfig?.maxClues || 6));
+}
+
+function defaultMode() {
+  return appConfig?.defaultMode || appConfig?.modes?.[0]?.id || "classic";
+}
+
+function modeList() {
+  return appConfig?.modes || [];
+}
+
 function isKnownMode(mode) {
-  return Boolean(MODE_CONFIG[mode]);
+  return modeList().some((item) => item.id === mode);
 }
 
 function modeConfig(mode) {
-  return MODE_CONFIG[mode] || MODE_CONFIG.classic;
+  return modeList().find((item) => item.id === mode) || modeList().find((item) => item.id === defaultMode()) || modeList()[0];
 }
 
 function modeLabel(mode) {
-  return modeConfig(mode).label;
+  return modeConfig(mode)?.label || "Classic";
 }
 
-function startingCluesForMode(mode) {
-  return Math.min(MAX_CLUES, modeConfig(mode).startingClues);
+function renderModeButtons() {
+  els.modeToggle.innerHTML = modeList().map((mode) => `
+    <button class="mode-button" type="button" data-mode="${escapeAttr(mode.id)}">
+      <strong>${escapeHtml(mode.label)}</strong>
+      <span>${escapeHtml(mode.description)}</span>
+    </button>
+  `).join("");
+}
+
+function renderHowToPlay() {
+  const rules = appConfig?.howToPlay?.length
+    ? appConfig.howToPlay
+    : ["Backend configuration controls game rules."];
+  els.howToPlayList.innerHTML = rules.map((rule) => `<li>${escapeHtml(rule)}</li>`).join("");
 }
 
 function saveStoredMode(mode) {
@@ -275,16 +302,15 @@ function findDiagnosis(input) {
 }
 
 function answerDiagnosisStatic() {
-  if (!activeCase?.answerId) return null;
-  return diagnoses.find((diagnosis) => diagnosis.id === activeCase.answerId) || null;
+  return null;
 }
 
 function maxGuessesForMode() {
-  return modeConfig(appMode).maxGuesses;
+  return modeConfig(appMode)?.maxGuesses || 6;
 }
 
 function createInitialState() {
-  const clues = activeCase?.clues?.length ? activeCase.clues.slice(0, MAX_CLUES) : [];
+  const clues = activeCase?.clues?.length ? activeCase.clues.slice(0, maxClues()) : [];
   return {
     mode: appMode,
     caseId: activeCase?.id || null,
@@ -306,13 +332,13 @@ function loadState() {
     const parsed = JSON.parse(localStorage.getItem(storageKey()));
     if (parsed?.caseId === activeCase.id && parsed?.date === getLocalDate() && parsed?.mode === appMode) {
       const storedClues = Array.isArray(parsed.clues) && parsed.clues.length
-        ? parsed.clues.slice(0, MAX_CLUES)
+        ? parsed.clues.slice(0, maxClues())
         : base.clues;
       const clues = storedClues.length >= base.clues.length ? storedClues : base.clues;
       return {
         ...base,
         ...parsed,
-        revealedClues: Math.max(clues.length, Math.min(MAX_CLUES, Number(parsed.revealedClues || clues.length || 1))),
+        revealedClues: Math.max(clues.length, Math.min(maxClues(), Number(parsed.revealedClues || clues.length || 1))),
         clues,
         guesses: Array.isArray(parsed.guesses) ? parsed.guesses : [],
         differentials: Array.isArray(parsed.differentials) ? parsed.differentials : []
@@ -409,9 +435,7 @@ async function submitGuess(event) {
 
   setFormBusy(true);
   try {
-    const result = apiMode
-      ? await submitGuessToBackend(diagnosis)
-      : resolveStaticGuess(diagnosis);
+    const result = await submitGuessToBackend(diagnosis);
 
     state.guesses.push({
       id: diagnosis.id,
@@ -428,18 +452,18 @@ async function submitGuess(event) {
     if (result.completed) {
       state.completed = true;
       state.won = Boolean(result.correct);
-      state.answer = result.answer || answerDiagnosisStatic();
+      state.answer = result.answer || null;
       state.explanation = result.explanation || activeCase.explanation || "";
       state.differentials = result.differentials || activeCase.differentials || [];
       if (!state.won && Array.isArray(result.allClues)) {
-        state.clues = result.allClues.slice(0, MAX_CLUES);
+        state.clues = result.allClues.slice(0, maxClues());
         state.revealedClues = state.clues.length;
       }
       recordStats();
       showMessage(state.won ? "Correct. Nice clinical reasoning." : "Case complete. Review the explanation.");
       openResultModal();
     } else {
-      showMessage(result.near ? "Same diagnostic family. Getting warmer." : "Not the best fit yet. New clue revealed.");
+      showMessage(result.near ? "Same diagnostic family. Getting warmer." : "Not the best fit yet. New cue revealed.");
     }
 
     els.guessInput.value = "";
@@ -465,57 +489,30 @@ async function submitGuessToBackend(diagnosis) {
   });
 }
 
-function resolveStaticGuess(diagnosis) {
-  const answer = answerDiagnosisStatic();
-  if (!answer) {
-    throw new Error("Static answer data is unavailable.");
-  }
-  const correct = diagnosis.id === answer.id;
-  const near = !correct && diagnosis.category === answer.category;
-  const guessCount = state.guesses.length + 1;
-  const completed = correct || appMode === "tough" || guessCount >= maxGuessesForMode();
-  const nextClue = !completed && activeCase.allClues
-    ? activeCase.allClues[state.clues.length]
-    : null;
-
-  return {
-    correct,
-    near,
-    completed,
-    nextClue,
-    answer,
-    explanation: completed ? activeCase.explanation : "",
-    differentials: completed ? activeCase.differentials : [],
-    allClues: completed ? activeCase.allClues : null
-  };
-}
-
 async function revealNextClue() {
-  if (!state || state.completed || appMode !== "tough") return;
-  if (state.clues.length >= Math.min(MAX_CLUES, activeCase.totalClues)) {
-    showMessage("All clues are already revealed.");
+  if (!state || state.completed || !modeConfig(appMode)?.canReveal) return;
+  if (state.clues.length >= Math.min(maxClues(), activeCase.totalClues)) {
+    showMessage("All cues are already revealed.");
     return;
   }
 
   els.revealClueButton.disabled = true;
   try {
-    const result = apiMode
-      ? await fetchJson("/api/reveal", {
-          method: "POST",
-          body: JSON.stringify({ caseId: activeCase.id, revealedClues: state.clues.length })
-        })
-      : { clue: activeCase.allClues?.[state.clues.length] };
+    const result = await fetchJson("/api/reveal", {
+      method: "POST",
+      body: JSON.stringify({ caseId: activeCase.id, revealedClues: state.clues.length })
+    });
 
     if (result.clue) {
       addClue(result.clue);
       saveState();
       render();
-      showMessage("New clue revealed. Your diagnosis is still final in Tough Mode.");
+      showMessage(`New cue revealed. Your diagnosis is still final in ${modeLabel(appMode)} Mode.`);
     } else {
-      showMessage("No more clues available.");
+      showMessage("No more cues available.");
     }
   } catch (error) {
-    showMessage(error.message || "Could not reveal another clue.");
+    showMessage(error.message || "Could not reveal another cue.");
   } finally {
     els.revealClueButton.disabled = false;
   }
@@ -523,7 +520,7 @@ async function revealNextClue() {
 
 function addClue(clue) {
   if (!clue || state.clues.includes(clue)) return;
-  state.clues = [...state.clues, clue].slice(0, MAX_CLUES);
+  state.clues = [...state.clues, clue].slice(0, maxClues());
   state.revealedClues = state.clues.length;
 }
 
@@ -545,26 +542,26 @@ function setFormBusy(isBusy) {
 function render() {
   if (!activeCase || !state) return;
 
-  const sourceLabel = apiMode ? "backend protected" : "static demo";
+  const sourceLabel = apiMode ? "backend protected" : "backend required";
   const currentModeLabel = `${modeLabel(appMode)} Mode`;
   els.caseMeta.textContent = `${activeCase.title} / ${getLocalDate()} / ${activeCase.patient} / ${currentModeLabel} / ${sourceLabel}`;
-  els.clueCounter.textContent = `${state.clues.length} / ${activeCase.totalClues || MAX_CLUES}`;
+  els.clueCounter.textContent = `${state.clues.length} / ${activeCase.totalClues || maxClues()}`;
   els.guessCounter.textContent = `${state.guesses.length} / ${maxGuessesForMode()}`;
   els.resultBadge.textContent = state.completed ? (state.won ? "Solved" : "Missed") : "In progress";
   els.resultBadge.style.color = state.completed ? (state.won ? "var(--green)" : "var(--red)") : "var(--ink)";
 
-  els.easyMode.classList.toggle("is-active", appMode === "easy");
-  els.classicMode.classList.toggle("is-active", appMode === "classic");
-  els.toughMode.classList.toggle("is-active", appMode === "tough");
-  els.toughActions.hidden = appMode !== "tough" || state.completed;
-  els.revealClueButton.disabled = state.completed || state.clues.length >= Math.min(MAX_CLUES, activeCase.totalClues);
+  els.modeToggle.querySelectorAll("[data-mode]").forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.mode === appMode);
+  });
+  els.toughActions.hidden = !modeConfig(appMode)?.canReveal || state.completed;
+  els.revealClueButton.disabled = state.completed || state.clues.length >= Math.min(maxClues(), activeCase.totalClues);
 
   els.clueStack.innerHTML = state.clues
     .map((clue, index) => `
       <article class="clue-card">
         <div class="clue-head">
           <span class="clue-number">${index + 1}</span>
-          <span class="clue-title">Clue ${index + 1}</span>
+          <span class="clue-title">Cue ${index + 1}</span>
         </div>
         <p class="clue-text">${escapeHtml(clue)}</p>
       </article>
@@ -772,14 +769,14 @@ function buildShareText() {
       ? `${state.guesses.length}/${maxGuessesForMode()}`
       : `X/${maxGuessesForMode()}`
     : `${state.guesses.length}/${maxGuessesForMode()}`;
-  return `Psychiatry Diagnosis ${modeLabel(appMode)} #${activeCase.caseNumber} ${line}\n${tiles || "_"}\n${location.origin}${location.pathname}`;
+  return `${appName()} ${modeLabel(appMode)} #${activeCase.caseNumber} ${line}\n${tiles || "_"}\n${location.origin}${location.pathname}`;
 }
 
 async function shareResult() {
   const text = buildShareText();
   try {
     if (navigator.share) {
-      await navigator.share({ title: "Psychiatry Diagnosis", text });
+      await navigator.share({ title: appName(), text });
       return;
     }
     await navigator.clipboard.writeText(text);

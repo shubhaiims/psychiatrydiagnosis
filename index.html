@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Psychiatry Diagnosis | DSM-5-TR Guessing Game</title>
+    <title>DIAGNOSIS DASH | DSM-5-TR Guessing Game</title>
     <meta
       name="description"
       content="A tougher daily educational psychiatry diagnosis guessing game with backend-fed DSM-5-TR diagnostic labels and original fictional cases."
@@ -12,11 +12,11 @@
   </head>
   <body>
     <header class="topbar">
-      <a class="brand" href="./" aria-label="Psychiatry Diagnosis home">
+      <a class="brand" href="./" aria-label="DIAGNOSIS DASH home">
         <img src="assets/diagnostic-flow.svg" alt="" class="brand-mark">
         <span>
           <span class="brand-kicker">DSM-5-TR learning game</span>
-          <span class="brand-title">Psychiatry Diagnosis</span>
+          <span class="brand-title" id="appName">DIAGNOSIS DASH</span>
         </span>
       </a>
       <nav class="topbar-actions" aria-label="Game actions">
@@ -38,24 +38,11 @@
           <p class="subtitle" id="caseMeta">Loading case from backend...</p>
         </div>
 
-        <section class="mode-toggle" aria-label="Game mode">
-          <button class="mode-button" id="easyMode" type="button" data-mode="easy">
-            <strong>Easy</strong>
-            <span>Starts with 4 clues and allows six guesses.</span>
-          </button>
-          <button class="mode-button is-active" id="classicMode" type="button" data-mode="classic">
-            <strong>Classic</strong>
-            <span>Starts with 1 clue. Misses reveal more.</span>
-          </button>
-          <button class="mode-button" id="toughMode" type="button" data-mode="tough">
-            <strong>Tough</strong>
-            <span>Starts with 5 clues. One final answer.</span>
-          </button>
-        </section>
+        <section class="mode-toggle" id="modeToggle" aria-label="Game mode"></section>
 
         <section class="mode-strip" aria-label="Game status">
           <div>
-            <span class="mode-label">Clues</span>
+            <span class="mode-label">Cues</span>
             <strong id="clueCounter">1 / 6</strong>
           </div>
           <div>
@@ -71,8 +58,8 @@
         <section class="clue-stack" id="clueStack" aria-live="polite"></section>
 
         <div class="tough-actions" id="toughActions" hidden>
-          <button class="text-button" id="revealClueButton" type="button">Reveal next clue</button>
-          <p>Reveal only what you need. In Tough Mode, submitting a diagnosis is final.</p>
+          <button class="text-button" id="revealClueButton" type="button">Reveal next cue</button>
+          <p>Reveal only what you need. Submitting a diagnosis is final in this mode.</p>
         </div>
 
         <form class="guess-form" id="guessForm">
@@ -95,12 +82,8 @@
       <aside class="side-column" aria-label="Learning panels">
         <section class="panel">
           <h2>How To Play</h2>
-          <ol class="compact-list">
-            <li>Easy mode starts with 4 clues and gives 6 guesses.</li>
-            <li>Classic mode gives 6 guesses and reveals a new clue after each miss.</li>
-            <li>Tough mode starts with 5 clues, lets you reveal the final clue, and your first diagnosis is final.</li>
-            <li>The frontend asks the backend for cases, clue reveals, and guess validation.</li>
-            <li>Plus-only clinical breakdowns are loaded only after paid access is verified.</li>
+          <ol class="compact-list" id="howToPlayList">
+            <li>Loading backend rules...</li>
           </ol>
         </section>
 
@@ -159,7 +142,7 @@
       <div class="modal-body">
         <button class="close-button" id="closeStats" type="button" aria-label="Close">x</button>
         <p class="eyebrow">Your stats</p>
-        <h2>Psychiatry Diagnosis</h2>
+        <h2 id="statsTitle">DIAGNOSIS DASH</h2>
         <div class="stats-grid" id="statsGrid"></div>
         <h3>Guess Distribution</h3>
         <div class="distribution" id="distribution"></div>

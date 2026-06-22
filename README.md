@@ -1,13 +1,14 @@
-# Psychiatry Diagnosis
+# DIAGNOSIS DASH
 
 An original DSM-5-TR educational diagnosis guessing game inspired by daily word games. Each case is fictional and progressively reveals clinical clues.
 
 ## What Is New
 
-- Classic Mode: six guesses, with a new clue after each miss.
-- Easy Mode: starts with 4 clues and allows six guesses.
-- Tough Mode: starts with 5 clues, allows the final clue to be revealed, then gives one final diagnosis guess.
-- Backend case engine: the frontend requests cases, clue reveals, and guess validation from `server.mjs`.
+- Backend-only editing: app name, mode rules, cue counts, cases, answers, and Plus guides live in backend files.
+- Classic Mode: starts with 3 cues and gives six guesses.
+- Easy Mode: starts with 4 cues and allows six guesses.
+- Tough Mode: starts with 5 cues, allows the final cue to be revealed, then gives one final diagnosis guess.
+- Backend case engine: the frontend requests cases, cue reveals, and guess validation from `server.mjs`.
 - More than 1000 generated fictional training cases stored in backend data.
 - Plus-only breakdowns: criteria guide, differential diagnoses, and how to distinguish them are returned only after a backend token check.
 - Static fallback data for GitHub Pages demos.
@@ -44,17 +45,23 @@ Then enter `test-plus` in the Plus token field after finishing a case.
 ## Data Layout
 
 - `data/diagnoses.json`: public DSM-5-TR diagnostic label list.
-- `data/static-cases.json`: static demo fallback, including answers, for GitHub Pages.
+- `backend/game-config.mjs`: editable backend source for app name, mode rules, cue counts, and how-to-play copy.
+- `data/static-cases.json`: generated answer-containing data for reference only; the app now requires the backend.
 - `backend/private/cases.json`: backend case bank used by `server.mjs`.
 - `backend/private/premium-diagnoses.json`: Plus-only educational diagnosis guides.
 - `backend/generate-cases.mjs`: deterministic case generator. Increase `--count` to create more cases.
 
 The Node server blocks direct static access to `backend/private/*` and to `data/static-cases.json`. For production paid access, deploy the backend with `PLUS_ACCESS_TOKEN` set and keep private data in a private server, private repo, or database.
 
+## Editing Policy
+
+Edit game behavior and content only in backend files, especially `backend/game-config.mjs`, `backend/generate-cases.mjs`, and `backend/private/*`. Frontend files should stay as a display client that consumes backend config and API responses.
+
 ## Editing Guides
 
-- `FRONTEND.md`: where to edit UI, styling, modes, forms, modals, and Plus display.
+- `FRONTEND.md`: read-only frontend map for understanding the display client.
 - `BACKEND.md`: where to edit API routes, generated cases, private data, and Plus token behavior.
+- `DEPLOYMENT.md`: where to deploy the backend and frontend together so it runs when your laptop is off.
 
 ## Scripts
 
