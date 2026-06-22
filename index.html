@@ -3,92 +3,134 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ICD-11 Psychiatry Diagnostic Interview</title>
+    <title>Psychiatry Diagnosis | DSM-5-TR Guessing Game</title>
     <meta
       name="description"
-      content="Structured psychiatric clinical interview support tool for clinicians."
+      content="A daily educational psychiatry diagnosis guessing game using DSM-5-TR diagnostic labels and original case clues."
     >
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
     <header class="topbar">
-      <div class="brand">
+      <a class="brand" href="./" aria-label="Psychiatry Diagnosis home">
         <img src="assets/diagnostic-flow.svg" alt="" class="brand-mark">
-        <div>
-          <p class="eyebrow">ICD-11 CDDR adapted</p>
-          <h1>Psychiatry Diagnostic Interview</h1>
-        </div>
-      </div>
-      <div class="topbar-actions" aria-label="Interview actions">
-        <button class="ghost-button" id="copyReport" title="Copy summary">
-          Copy
+        <span>
+          <span class="brand-kicker">DSM-5-TR learning game</span>
+          <span class="brand-title">Psychiatry Diagnosis</span>
+        </span>
+      </a>
+      <nav class="topbar-actions" aria-label="Game actions">
+        <button class="icon-button" id="statsButton" type="button" title="Stats" aria-label="Stats">
+          <span aria-hidden="true">#</span>
         </button>
-        <button class="ghost-button" id="printReport" title="Print summary">
-          Print
+        <button class="icon-button" id="shareButton" type="button" title="Share" aria-label="Share">
+          <span aria-hidden="true">S</span>
         </button>
-        <button class="danger-button" id="resetInterview" title="Clear saved responses">
-          Reset
-        </button>
-      </div>
+        <button class="text-button danger" id="resetButton" type="button">Reset</button>
+      </nav>
     </header>
 
-    <main class="app-shell">
-      <aside class="left-panel" aria-label="Interview navigation">
-        <label class="field-label" for="interviewSelect">Interview package</label>
-        <select id="interviewSelect" class="module-select"></select>
-
-        <div class="progress-block" aria-label="Completion">
-          <div class="progress-meta">
-            <span id="progressText">0 of 0</span>
-            <span id="progressPercent">0%</span>
-          </div>
-          <div class="progress-track">
-            <div class="progress-fill" id="progressFill"></div>
-          </div>
+    <main class="game-shell">
+      <section class="game-column" aria-label="Daily diagnosis game">
+        <div class="title-block">
+          <p class="eyebrow">Daily clinical reasoning challenge</p>
+          <h1>What is the most likely DSM-5-TR diagnosis?</h1>
+          <p class="subtitle" id="caseMeta">Loading today's case...</p>
         </div>
 
-        <nav class="stage-list" id="stageList" aria-label="Interview stages"></nav>
-      </aside>
+        <section class="mode-strip" aria-label="Game status">
+          <div>
+            <span class="mode-label">Clues</span>
+            <strong id="clueCounter">1 / 6</strong>
+          </div>
+          <div>
+            <span class="mode-label">Guesses</span>
+            <strong id="guessCounter">0 / 6</strong>
+          </div>
+          <div>
+            <span class="mode-label">Result</span>
+            <strong id="resultBadge">In progress</strong>
+          </div>
+        </section>
 
-      <section class="interview-panel" aria-label="Current question">
-        <div class="section-tabs" role="tablist" aria-label="Views">
-          <button class="tab-button is-active" data-tab="interview" role="tab">
-            Interview
-          </button>
-          <button class="tab-button" data-tab="findings" role="tab">
-            Findings
-          </button>
-          <button class="tab-button" data-tab="data" role="tab">
-            Data
-          </button>
-        </div>
+        <section class="clue-stack" id="clueStack" aria-live="polite"></section>
 
-        <div id="interviewView" class="view-panel is-active"></div>
-        <div id="findingsView" class="view-panel"></div>
-        <div id="dataView" class="view-panel"></div>
+        <form class="guess-form" id="guessForm">
+          <label class="sr-only" for="guessInput">Enter a possible DSM-5-TR diagnosis</label>
+          <input
+            id="guessInput"
+            type="text"
+            autocomplete="off"
+            list="diagnosisOptions"
+            placeholder="Enter a possible DSM-5-TR diagnosis..."
+          >
+          <datalist id="diagnosisOptions"></datalist>
+          <button class="primary-button" type="submit">Submit</button>
+        </form>
+
+        <p class="form-message" id="formMessage" role="status"></p>
+        <section class="guess-list" id="guessList" aria-label="Previous guesses"></section>
       </section>
 
-      <aside class="right-panel" aria-label="Clinical state">
-        <section class="status-section">
-          <h2>Safety</h2>
-          <div id="safetyFlags" class="stack-list"></div>
+      <aside class="side-column" aria-label="Learning panels">
+        <section class="panel">
+          <h2>How To Play</h2>
+          <ol class="compact-list">
+            <li>Read the first patient clue.</li>
+            <li>Guess the DSM-5-TR diagnosis from the search box.</li>
+            <li>Each wrong guess reveals a more specific clue.</li>
+            <li>You have 6 clues and 6 guesses.</li>
+          </ol>
         </section>
 
-        <section class="status-section">
-          <h2>Diagnostic Review</h2>
-          <div id="ruleSignals" class="stack-list"></div>
+        <section class="panel">
+          <h2>Diagnostic Library</h2>
+          <div class="library-search">
+            <label class="sr-only" for="librarySearch">Search diagnoses</label>
+            <input id="librarySearch" type="search" placeholder="Search diagnoses...">
+          </div>
+          <div class="diagnosis-library" id="diagnosisLibrary"></div>
         </section>
 
-        <section class="status-section">
-          <h2>Score Domains</h2>
-          <div id="scoreDomains" class="score-grid"></div>
+        <section class="panel clinical-note">
+          <h2>Important Disclaimer</h2>
+          <p>
+            This game is for learning and play only. Case content is simplified,
+            fictional, and not clinically validated. It is not a diagnostic tool,
+            clinical advice, or a substitute for a qualified mental health professional.
+          </p>
         </section>
       </aside>
     </main>
 
+    <dialog class="modal" id="resultModal">
+      <div class="modal-body">
+        <button class="close-button" id="closeResult" type="button" aria-label="Close">x</button>
+        <p class="eyebrow" id="resultEyebrow">Result</p>
+        <h2 id="resultTitle">Case complete</h2>
+        <p id="answerLine" class="answer-line"></p>
+        <div class="explanation-block" id="explanationBlock"></div>
+        <div class="modal-actions">
+          <button class="primary-button" id="modalShare" type="button">Share</button>
+          <button class="text-button" id="modalClose" type="button">Close</button>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog class="modal" id="statsModal">
+      <div class="modal-body">
+        <button class="close-button" id="closeStats" type="button" aria-label="Close">x</button>
+        <p class="eyebrow">Your stats</p>
+        <h2>Psychiatry Diagnosis</h2>
+        <div class="stats-grid" id="statsGrid"></div>
+        <h3>Guess Distribution</h3>
+        <div class="distribution" id="distribution"></div>
+      </div>
+    </dialog>
+
     <footer class="footer-note">
-      <strong>Clinical use:</strong> ICD-11 CDDR-adapted, non-commercial clinical support;
-      not an official WHO, DSM, or SCID instrument and not a substitute for clinician judgment.
+      DSM-5-TR is a trademarked publication of the American Psychiatric Association.
+      This independent educational game uses original fictional cases and diagnostic labels only.
     </footer>
 
     <script src="app.js" defer></script>

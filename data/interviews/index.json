@@ -1,9 +1,0 @@
-{
-  "interviews": [
-    {
-      "id": "adult-diagnostic-template",
-      "title": "Adult Structured Diagnostic Interview",
-      "file": "data/interviews/adult-diagnostic-template.json"
-    }
-  ]
-}
